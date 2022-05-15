@@ -9,7 +9,9 @@
     'website':'sheesh',
     'depends':['base'],
     'data':[
+        'security/ir.model.access.csv',
         'views/inquiry.xml'
+
     ],
     'qweb':[],
 

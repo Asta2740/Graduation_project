@@ -1,2 +1,2 @@
-id,name,model_id,group_id,perm_read,perm_write,perm_create,prem_unlik
-scrapper_user,base user,model_scrapper_profile,base.group,1,1,1,1
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_recent_inquiry,access.recent.inquiry,model_recent_inquiry,,1,1,1,1

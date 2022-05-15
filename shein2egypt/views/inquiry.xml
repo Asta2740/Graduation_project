@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!--  main menu item-->
-    <menuitem id="inquiry_root"
-              name="Recent Inquiry"
+    <menuitem id="all_inquiries"
+              name="web scrapper"
               sequence="10"/><!--  sequance is like how it will be ordered in the odoo-->
 
- <!--   <menuitem id="sale_order_menu"
-              name="Orders"
-              parent="sale_menu_root"
-              sequence="2"/>-->
+    <menuitem id="inquiry_root"
+              name="Recent inquiry"
+              parent="all_inquiries"
+              sequence="10"/>
+
+    <menuitem id="inquiry_Branch"
+              name="Recent inquiry"
+              parent="inquiry_root"
+              sequence="10"/>
 </odoo>

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
+
+
+    <record id="inquiry_action" model="ir.actions.act_window">
+        <field name="name">inquiry Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">recent.inquiry</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Recent Inquiries of all customers
+            </p>
+        </field>
+    </record>
+
+
     <!--  main menu item-->
     <menuitem id="all_inquiries"
               name="web scrapper"

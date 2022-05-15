@@ -6,7 +6,12 @@
         <field name="model">recent.inquiry</field>
         <field name="arch" type="xml">
             <form> <!--if you add it here tree / knban / or w.e it will understand what you write it in-->
-                <filed name="name"/>
+                <sheet>
+                    <group>
+                        <filed name="name"/>
+                    </group>
+
+                </sheet>
                 <!--<group>
                     <group>
                     </group>

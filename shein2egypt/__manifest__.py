@@ -8,9 +8,7 @@
     'category':'Sales/Sales',
     'website':'sheesh',
     'depends':['base'],
-    'data':[
-        "views/school_view.xml"
-    ],
+    'data':[],
     'qweb':[],
 
 }

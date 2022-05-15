@@ -14,3 +14,4 @@
     'qweb':[],
 
 }
+#a short idea of what is the module about

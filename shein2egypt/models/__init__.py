@@ -1,1 +1,1 @@
-from . import school
+from . import recent_inquires

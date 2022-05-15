@@ -1,0 +1,2 @@
+id,name,model_id,group_id,perm_read,perm_write,perm_create,prem_unlik
+scrapper_user,base user,model_scrapper_profile,base.group,1,1,1,1

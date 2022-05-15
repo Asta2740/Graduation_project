@@ -28,5 +28,6 @@
     <menuitem id="inquiry_Branch"
               name="Recent inquiry"
               parent="inquiry_root"
+              action="inquiry_action"
               sequence="10"/>
 </odoo>

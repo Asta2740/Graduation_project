@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <record id="view_account_reconcile_model_line_form" model="ir.ui.view">
-        <field name="name">account.reconcile.model.line.form</field>
-        <field name="model">account.reconcile.model.line</field>
+    <record id="inquiry_form" model="ir.ui.view">
+        <field name="name">recent.inquiry.form</field>
+        <field name="model">recent.inquiry</field>
         <field name="arch" type="xml">
-            <form>
-
-                <group>
+            <form> <!--if you add it here tree / knban / or w.e it will understand what you write it in-->
+                <filed name="name"/>
+                <!--<group>
                     <group>
                     </group>
                     <group>
                     </group>
-                </group>
+                </group>-->
             </form>
         </field>
     </record>

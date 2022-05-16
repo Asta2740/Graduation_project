@@ -45,8 +45,16 @@ def get_product(url):
             'src')
     driver.quit()
     print(Product(name=name, price=price, color=color, link=link, image=image)
-)
+          )
     return Product(name=name, price=price, color=color, link=link, image=image)
+
+
+def get_raw_price(string):
+    new_str = ''
+    for each in string:
+        if each in "1234567890.":
+            new_str += each
+    return float(new_str)
 
 
 class shein2egypt(http.Controller):
@@ -54,10 +62,17 @@ class shein2egypt(http.Controller):
     @http.route('/Shein2egypt', website=True, auth='public')
     def web_scrapper(self, **kw):
         if kw:
-            product = get_product(
-                kw["Url"]
-            )
-            print(product)
+            product = get_product(kw["Url"])
+
+            request.env['product.template'].sudo().create({'name': product.name,
+                                                           'list_price': get_raw_price(product.price),
+                                                           'product_description': product.link,
+                                                           })
+            # 'responsible_id':
+            #'image_1920': product.image
+
+            print(product.image)
             return str(product)
+
         return request.render('shein2egypt.Shein_page')
         # return "hello world"

@@ -10,7 +10,8 @@
     'depends':['product'],
     'data':[
         'security/ir.model.access.csv',
-        'views/inquiry.xml'
+        'views/inquiry.xml',
+        'views/products.xml'
 
     ],
     'qweb':[],

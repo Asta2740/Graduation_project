@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!--now we need to inhert the coresspoinding form view-->
-    <record id="crm_lead_view_list_activities" model="ir.ui.view">
-        <field name="name">crm.lead.list.activities</field>
-        <field name="model">crm.lead</field>
-        <field name="mode">primary</field>
-        <field name="priority">20</field>
-        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+    <record id="product_template_only_form_view_inherited" model="ir.ui.view">
+        <field name="name">product.template.inherited</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
-
-
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name ="product_description"/>
+            </xpath>
         </field>
     </record>
 

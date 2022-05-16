@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="Shein_page" name="Shein2Egypt">
+        <t t-call="website.layout">
+            Hello subscribe the channel..!
+        </t>
+    </template>
+
+</odoo>

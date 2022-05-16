@@ -10,11 +10,10 @@
     'depends':['product'],
     'data':[
         'security/ir.model.access.csv',
+        'views/template.xml',
         'views/inquiry.xml',
-        'views/products.xml'
+        'views/products.xml',
 
     ],
-    'qweb':[],
-
 }
 #a short idea of what is the module about

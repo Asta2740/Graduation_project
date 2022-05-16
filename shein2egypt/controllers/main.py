@@ -1,25 +1,59 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+import undetected_chromedriver as uc
+from selenium.webdriver.chrome.options import Options
+from dataclasses import dataclass
 
 
-class WebsiteSaleInherit(WebsiteSale):
-    @http.route([
-        '''/shop''',
-        '''/shop/page/<int:page>''',
-        '''/shop/category/<model("product.public.category"):category>''',
-        '''/shop/category/<model("product.public.category"):category>/page/<int:page>'''
-    ], type='http', auth="public", website=True,)
-    def shop(self, page=0, category=None, search='', min_price=0.0, max_price=0.0, ppg=False, **post):
-        res = super(WebsiteSaleInherit, self).shop(page=0, category=None, search='', min_price=0.0, max_price=0.0,
-                                                   ppg=False, **post)
-        print("wtf am i doing")
-        return res
+@dataclass
+class Product:
+    name: str = None
+    color: str = None
+    price: str = None
+    link: str = None
+    image: str = None
+    is_featured: bool = False
+
+
+def get_product(url):
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    driver = uc.Chrome(options=options)
+    driver.get(url)
+    name = driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/h1').text
+    try:
+        price = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[2]/div/div/span').text
+    except:
+        price = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[3]/div/div/span').text
+    try:
+        color = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div[1]/div[1]/span/span').text
+    except:
+        color = 'Fixed'
+    link = url
+    try:
+        image = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[1]/div[1]/div[2]/div/div[1]/div[2]/img').get_attribute(
+            'src')
+    except:
+        image = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[1]/div[1]/div[1]/div/div[1]/div[1]/img[1]').get_attribute(
+            'src')
+    driver.quit()
+    print(Product(name=name, price=price, color=color, link=link, image=image)
+)
+    return Product(name=name, price=price, color=color, link=link, image=image)
 
 
 class shein2egypt(http.Controller):
 
-    @http.route('/Shein2egypt', website=True, auth='user')
+    @http.route('/Shein2egypt', website=True, auth='public')
     def web_scrapper(self, **kw):
-        return request.render("shein2egypt.Shein_page", {})
+        if kw:
+            return str(kw)
+        return request.render('shein2egypt.Shein_page')
         # return "hello world"

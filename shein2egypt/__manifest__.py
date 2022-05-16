@@ -13,6 +13,7 @@
         'views/template.xml',
         'views/inquiry.xml',
         'views/products.xml',
+        'security/security.xml'
 
     ],
 }

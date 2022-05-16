@@ -7,7 +7,7 @@
     'description':"we will begin our journy now",
     'category':'Sales/Sales',
     'website':'sheesh',
-    'depends':['base'],
+    'depends':['product'],
     'data':[
         'security/ir.model.access.csv',
         'views/inquiry.xml'

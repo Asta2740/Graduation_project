@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="menu_shein_scrapper" model="website.menu">
+        <field name="name">Shein2Egypt</field>
+        <field name="url">/Shein2egypt</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">40</field>
+    </record>
+
     <template id="Shein_page" name="Shein2Egypt">
         <t t-call="website.layout">
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"

@@ -67,9 +67,10 @@ class shein2egypt(http.Controller):
             request.env['product.template'].sudo().create({'name': product.name,
                                                            'list_price': get_raw_price(product.price),
                                                            'product_description': product.link,
+                                                           'is_published': True
                                                            })
             # 'responsible_id':
-            #'image_1920': product.image
+            # 'image_1920': product.image
 
             print(product.image)
             return str(product)

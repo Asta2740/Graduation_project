@@ -7,7 +7,7 @@
     'description': "we will begin our journy now",
     'category': 'Sales/Sales',
     'website': 'sheesh',
-    'depends': ['product', 'website'],
+    'depends': ['product', 'website', 'website_sale'],
     'data': [
         'security/ir.model.access.csv',
         'views/template.xml',

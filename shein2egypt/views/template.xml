@@ -19,6 +19,7 @@
             <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/nav.css"/>
             <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/shein2egypt.css"/>
             <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/login.css"/>
+            <!--<link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/shein2egypt.css"/>-->
             <!--fav icon-->
             <link rel="shortcut icon" href="g letter black.png"/>
             <script src="https://kit.fontawesome.com/c8e4d183c2.js" crossorigin="anonymous"></script>
@@ -28,12 +29,22 @@
                   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
 
+
             <form action="/Shein2egypt">
                 <div class="shein2egypt" style="max-width:1400px">
                     <h1 class="shein2egypt-text">Shop Any Online SHEIN Store in USA,UK or UAE</h1>
                     <h3 class="shein">Delivers to your address in Egypt,Pay in Egyptian Pounds</h3>
                     <br>
+                        <!--<h3 class="text">Choose size:</h3>-->
                         <div class="form">
+                            <!--<div class="size">
+                                <select name="size" id="size" size="1">
+                                    <option value="S">S</option>
+                                    <option value="L">L</option>
+                                    <option value="M">M</option>
+                                    <option value="XL">XL</option>
+                                </select>
+                            </div>-->
                             <input type="text" class="search-box-shein" id="Url" name="Url"
                                    placeholder="Product link here (FULL URL)"/>
                             <button class="search-btn-shein">search</button>

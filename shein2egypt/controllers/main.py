@@ -36,7 +36,6 @@ from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.osv import expression
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -217,7 +216,8 @@ class WebsiteSale_inhernet(WebsiteSale):
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
-        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list, min_price=min_price, max_price=max_price, order=post.get('order'))
+        keep = QueryURL('/shop', category=category and int(category), search=search, attrib=attrib_list,
+                        min_price=min_price, max_price=max_price, order=post.get('order'))
 
         pricelist_context, pricelist = self._get_pricelist_context()
 
@@ -226,7 +226,9 @@ class WebsiteSale_inhernet(WebsiteSale):
         filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             company_currency = request.website.company_id.currency_id
-            conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+            conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id,
+                                                                               request.website.company_id,
+                                                                               fields.Date.today())
         else:
             conversion_rate = 1
 
@@ -251,10 +253,12 @@ class WebsiteSale_inhernet(WebsiteSale):
         }
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
-            limit=None, order=self._get_search_order(post), options=options)
-        print(details)
+                                                                                       limit=None,
+                                                                                       order=self._get_search_order(
+                                                                                           post), options=options)
+
         search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
-        print(search_product)
+
         filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
@@ -288,7 +292,8 @@ class WebsiteSale_inhernet(WebsiteSale):
         website_domain = request.website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
-            search_categories = Category.search([('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
+            search_categories = Category.search(
+                [('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
             categs_domain.append(('id', 'in', search_categories.ids))
         else:
             search_categories = Category
@@ -300,8 +305,9 @@ class WebsiteSale_inhernet(WebsiteSale):
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
         offset = pager['offset']
         # youssef display the certain products here
-        products = request.env['product.template'].sudo().search([('responsible_id', '=', request.env.user.id)])[offset:offset + ppg]
-        print(products)
+        products = request.env['product.template'].sudo().search([('responsible_id', '=', request.env.user.id)],
+                                                                 order='id desc')[
+                   offset:offset + ppg]
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -319,6 +325,10 @@ class WebsiteSale_inhernet(WebsiteSale):
                 layout_mode = 'list'
             else:
                 layout_mode = 'grid'
+        x = products
+
+        print(x)
+
         values = {
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
@@ -413,12 +423,11 @@ def get_raw_price(string):
 
 
 def upload_image(link):
-    print(link)
     if 'https:' in link:
         get = urllib.request.urlopen(link)
     else:
         get = urllib.request.urlopen(
-        'https:' + str(link))
+            'https:' + str(link))
 
     img = get.read()
     files = {'files[]': ('image.png', img)}
@@ -432,10 +441,10 @@ def get_img(code):
 
 class shein2egypt(http.Controller):
 
-    @http.route('/Shein2egypt', website=True, auth='public')
+    @http.route('/Shein2egypt', website=True, auth='user')
     def web_scrapper(self, **kw):
         if kw:
-            if 'shein' in kw :
+            if 'https' in kw["Url"]:
                 product = get_product(kw["Url"])
                 code = upload_image(product.image)
 
@@ -448,11 +457,24 @@ class shein2egypt(http.Controller):
                 # 'responsible_id':
                 # 'image_1920': product.image
 
-                print(product.image)
                 return request.redirect("/shop")
             else:
+
                 return request.redirect("/Shein2egypt")
 
-
         return request.render('shein2egypt.Shein_page')
-        # return "hello world"
+
+
+class pos_website_sale(http.Controller):
+    @http.route(['/shop/clear_cart'], type='json', auth="public", website=True)
+    def clear_cart(self):
+        order = request.website.sale_get_order()
+        if order:
+            for line in order.website_order_line:
+                line.unlink()
+
+# class popcat(http.Controller):
+#
+#     @http.route('/popcat', website=True, auth='user')
+#     def popcat(self, **kw):
+#         return request.render('shein2egypt.Pop_cat')

@@ -1,13 +1,12 @@
 body{
     background-color:#F2EBE5;
 }
-
 .shein2egypt-text{
     color: rgb(9, 9, 9);
     text-align: center;
     text-align-last: center;
-  
-    
+
+
 }
 .shein{
     color: gray;
@@ -15,7 +14,6 @@ body{
 
 }
 
- 
 .form{
     text-align: center;
     width: 500px;
@@ -30,14 +28,16 @@ body{
     border-bottom-left-radius: 10px;
     border: 1px solid #d1d1d1;
     text-transform: capitalize;
-    background:#fff;
+    background: none;
     color: #a9a9a9;
     outline: none;
+    margin: auto;
+    margin-bottom: 5rem;
     
 }
 .search-btn-shein{
 
-    width: 100%;
+    width: 20%;
     height: 40px;
     padding: 10px 20px;
     border: none;
@@ -49,6 +49,7 @@ body{
     font-size: 15px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+
 }
 .shein-text{
  color: rgb(9, 9, 9);
@@ -59,10 +60,10 @@ body{
 
 .shein-img{
     text-align: center;
-  
-   
+    margin-Bottom="24rem"
 
 }
+
 .text{
     text-align:center;
     text-align-last: left;
@@ -75,5 +76,9 @@ body{
   width: 20%;
     font-size: 130%;
     line-height: 2.4;
-   
+
 }
+
+ div#wrap div &gt; h1 {
+            color: $o-brand-odoo;
+        }

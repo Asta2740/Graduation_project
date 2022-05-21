@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="Shein_page2ar" name="Shein2Egypt2">
+        <t t-call="website.layout">
+
+            <div id="wrap" class="oe_structure oe_empty"/>
+
+            <link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+                  integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+                  crossorigin="anonymous"/>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+                    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                    crossorigin="anonymous"/>
+            <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/nav.css"/>
+            <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/shein2egypt.css"/>
+            <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/login.css"/>
+            <!--<link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/shein2egypt.css"/>-->
+            <!--fav icon-->
+            <link rel="shortcut icon" href="g letter black.png"/>
+            <script src="https://kit.fontawesome.com/c8e4d183c2.js" crossorigin="anonymous"></script>
+            <script src="js/jquery.js"></script>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sakkal Majalla"/>
+            <link rel="stylesheet"
+                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+            <form action="/Shein2egypt">
+                <div class="shein2egypt" style="max-width:1400px">
+
+
+                    <h1 class="shein2egypt-text">تسوق من متجر SHEIN عبر الإنترنت في المملكة العربية السعودية</h1>
+                    <h3 class="shein">يوصل إلى عنوانك في مصر ، ادفع بالجنيه المصري
+                    </h3>
+                    <br>
+
+                        <div class="form">
+                            <input type="text" class="search-box-shein" id="Url" name="Url"
+                                   placeholder="الرجاء وضع رابط منتج صالح هنا (عنوان URL كامل)
+"/>
+                            <button class="search-btn-shein">search</button>
+                        </div>
+                    </br>
+                    <div class="shein-img">
+                        <a href="https://ar.shein.com/" target="_blank" class="shein-img">
+                            <img src="shein2egypt/static/img/shein-logo-4.png"/>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+        </t>
+    </template>
+</odoo>

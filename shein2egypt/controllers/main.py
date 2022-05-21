@@ -136,6 +136,56 @@ class shein2egypt(http.Controller):
         return request.render('shein2egypt.Shein_page')
 
 
+class shein2egyptar(http.Controller):
+
+    @http.route('/ar/Shein2egypt', website=True, auth='user')
+    def web_scrapper(self, **kw):
+        if kw:
+            if 'https' in kw["Url"]:
+                Link_of_product = kw["Url"]
+                checkLink = request.env['product.template'].search(
+                    [('product_description', '=', Link_of_product,)])
+
+                if checkLink:
+                    # if there is a product with same link we remove it from category so it doesn't show in
+                    # ALl search history part
+                    product = get_product(kw["Url"])
+                    code = upload_image(product.image)
+                    userid = request.env.user.id
+
+                    request.env['product.template'].sudo().create({'name': product.name,
+                                                                   'list_price': get_raw_price(product.price),
+                                                                   'product_description': product.link,
+                                                                   'is_published': True,
+                                                                   'image_1920': base64.b64encode(get_img(code)),
+                                                                   'description': userid
+                                                                   })
+                    return request.redirect("/shop/category/your-search-history-8")
+
+                else:
+                    product = get_product(kw["Url"])
+                    code = upload_image(product.image)
+                    x = request.env['product.public.category'].sudo().search(
+                        [('name', '=', 'Your Search History',)])
+                    userid = request.env.user.id
+
+                    request.env['product.template'].sudo().create({'name': product.name,
+                                                                   'list_price': get_raw_price(product.price),
+                                                                   'product_description': product.link,
+                                                                   'is_published': True,
+                                                                   'image_1920': base64.b64encode(get_img(code)),
+                                                                   'public_categ_ids': [(6, 0, [x.id])],
+                                                                   'description': userid
+
+                                                                   })
+                    return request.redirect("/shop/category/your-search-history-8")
+            else:
+
+                return request.redirect("/Shein2egypt")
+
+        return request.render('shein2egypt.Shein_page2ar')
+
+
 class pos_website_sale(http.Controller):
     @http.route(['/shop/clear_cart'], type='json', auth="public", website=True)
     def clear_cart(self):

@@ -15,6 +15,7 @@
         'views/products.xml',
         'security/security.xml',
         'views/Menu_bars.xml',
+        'views/translation_s2e.xml',
 
     ],
 

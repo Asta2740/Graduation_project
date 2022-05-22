@@ -32,23 +32,14 @@
                                 <h1 class="shein2egypt-text">Shop from online SHEIN Store in SA</h1>
                                 <h3 class="shein">Delivers to your address in Egypt, Pay in Egyptian Pounds</h3>
                                 <br>
-                                    <!--<h3 class="text">Choose size:</h3>-->
                                     <div class="form">
-                                        <!--<div class="size">
-                                            <select name="size" id="size" size="1">
-                                                <option value="S">S</option>
-                                                <option value="L">L</option>
-                                                <option value="M">M</option>
-                                                <option value="XL">XL</option>
-                                            </select>
-                                        </div>-->
                                         <input type="text" class="search-box-shein" id="Url" name="Url"
                                                placeholder="Product link here (FULL URL)"/>
                                         <button class="search-btn-shein">search</button>
                                     </div>
                                 </br>
                                 <div class="shein-img">
-                                    <a href="https://ar.shein.com/" target="_blank" class="shein-img">
+                                    <a href="https://ar.shein.com/  " target="_blank" class="shein-img">
                                         <img src="shein2egypt/static/img/shein-logo-4.png"/>
                                     </a>
                                 </div>

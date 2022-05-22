@@ -308,6 +308,7 @@ class WebsiteSale_inhernet(WebsiteSale):
 
         # youssef category selection
         if category:
+            # for personal store
             if request.env['product.public.category'].sudo().search([('id', '=', '8')]) in category:
                 products = request.env['product.template'].sudo().search(
                     [('responsible_id', '=', request.env.user.id,

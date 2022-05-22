@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from dataclasses import dataclass
 from odoo import http
 from odoo.http import request
+import time
 
 
 @dataclass
@@ -19,6 +20,9 @@ class Product:
 
 
 def get_product(url):
+    start = time.time()
+
+
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
@@ -47,7 +51,12 @@ def get_product(url):
             'src')
     driver.quit()
     print(Product(name=name, price=price, color=color, link=link, image=image)
+
           )
+
+    end = time.time()
+    print(f"Runtime of the program is {end - start}")
+
     return Product(name=name, price=price, color=color, link=link, image=image)
 
 
@@ -110,9 +119,12 @@ class shein2egypt(http.Controller):
                                                                    'image_1920': base64.b64encode(get_img(code)),
                                                                    'description': userid
                                                                    })
+
                     return request.redirect("/shop/category/your-search-history-8")
 
                 else:
+                    start = time.time()
+
                     product = get_product(kw["Url"])
                     code = upload_image(product.image)
                     x = request.env['product.public.category'].sudo().search(
@@ -128,6 +140,8 @@ class shein2egypt(http.Controller):
                                                                    'description': userid
 
                                                                    })
+                    end = time.time()
+                    print(f"Runtime of the program is {end - start}")
                     return request.redirect("/shop/category/your-search-history-8")
             else:
 

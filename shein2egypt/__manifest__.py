@@ -18,6 +18,9 @@
 
 
     ],
+    'assets': {
+
+    },
 
     'installable': True,
     'application': True,

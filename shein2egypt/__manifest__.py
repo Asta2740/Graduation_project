@@ -19,7 +19,9 @@
 
     ],
     'assets': {
-
+        'web.assets_frontend': [
+            'shein2egypt/static/scss/shein2egypt.css',
+    ],
     },
 
     'installable': True,

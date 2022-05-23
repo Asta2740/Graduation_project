@@ -8,8 +8,10 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='categ_id']" position="after">
                 <field name ="product_description"/>
+                <field name ="Counter"/>
             </xpath>
         </field>
     </record>
+
 
 </odoo>

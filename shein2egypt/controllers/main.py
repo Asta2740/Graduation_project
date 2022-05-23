@@ -22,12 +22,13 @@ class Product:
     size3: str = None
     size4: str = None
     size5: str = None
-
+    size6: str = None
+    counterT: str = None
 
 
 def get_product(url):
+    counter = 0
     start = time.time()
-
 
     options = Options()
     options.add_argument('--headless')
@@ -57,21 +58,94 @@ def get_product(url):
             'src')
 
     try:
+        counter = counter + 1
+
         size1 = driver.find_element_by_xpath(
             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div/div').text
+
+        if 'XS - L' in size1:
+            size1 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
+
     except:
-        size1 = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
+        size1 = 'Nothing'
+        counter = counter - 1
+
+    if 'Nothing' in size1:
+        size2 = 'Nothing'
+        size3 = 'Nothing'
+        size4 = 'Nothing'
+        size5 = 'Nothing'
+        size6 = 'Nothing'
+    else:
+        try:
+            counter = counter + 1
+
+            size2 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
+            if size1 in size2 and size1 != 'L' and size2 != 'XL':
+                size2 = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
+        except:
+            size2 = 'Nothing'
+            counter = counter - 1
+
+        try:
+            counter = counter + 1
+            size3 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
+            if size2 in size3 and size2 != 'L' and size3 != 'XL':
+                size3 = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
+        except:
+            size3 = 'Nothing'
+            counter = counter - 1
+
+        try:
+            counter = counter + 1
+            size4 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
+            if size3 in size4 and size3 != 'L' and size4 != 'XL':
+                size4 = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
+        except:
+            counter = counter - 1
+            size4 = 'Nothing'
+
+        try:
+            counter = counter + 1
+            size5 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
+            if size4 in size5 and size4 != 'L' and size5 != 'XL':
+                size5 = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
+        except:
+            counter = counter - 1
+            size5 = 'Nothing'
+
+        try:
+            counter = counter + 1
+            size6 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
+            if size5 in size6 and size5 != 'L' and size6 != 'XL':
+                size6 = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
+        except:
+            counter = counter - 1
+            size6 = 'Nothing'
+    counterT = str(counter)
 
     driver.quit()
-    print(Product(name=name, price=price, color=color, link=link, image=image, size1=size1)
+    print(Product(name=name, price=price, color=color, link=link, image=image, size1=size1, size2=size2, size3=size3,
+                  size4=size4, size5=size5, size6=size6, counterT=counterT)
 
           )
 
     end = time.time()
     print(f"scrapper {end - start}")
 
-    return Product(name=name, price=price, color=color, link=link, image=image)
+    return Product(name=name, price=price, color=color, link=link, image=image, size1=size1, size2=size2, size3=size3,
+                   size4=size4, size5=size5, size6=size6, counterT=counter)
 
 
 def get_raw_price(string):
@@ -111,102 +185,121 @@ def get_img(code):
 
 class shein2egypt(http.Controller):
 
-    @http.route('/Shein2egypt', website=True, auth='user' )
+    @http.route('/Shein2egypt', website=True, auth='user')
     def web_scrapper(self, **kw):
         if kw:
-            product = get_product(kw["Url"])
-            return product.size
-            # if 'https' in kw["Url"]:
-            #     #checking if its shein url
-            #     Link_of_product = kw["Url"]
-            #
-            #     checkLink = request.env['product.template'].search(
-            #         [('product_description', '=', Link_of_product,)])
-            #
-            #     if checkLink:
-            #         # if there is a product with same link we remove it from category so it doesn't show in
-            #         # ALl search history part
-            #         product = get_product(kw["Url"])
-            #         start = time.time()
-            #         code = upload_image(product.image)
-            #         userid = request.env.user.id
-            #         end = time.time()
-            #         print(f"image loading in DB  {end - start}")
-            #         start = time.time()
-            #
-            #         request.env['product.template'].sudo().create({'name': product.name,
-            #                                                        'list_price': get_raw_price(product.price),
-            #                                                        'product_description': product.link,
-            #                                                        'is_published': True,
-            #                                                        'image_1920': base64.b64encode(get_img(code)),
-            #                                                        'description': userid
-            #                                                        })
-            #         end = time.time()
-            #         print(f"adding to database in DB {end - start}")
-            #
-            #         return request.redirect("/shop/category/your-search-history-8")
-            #
-            #
-            #     else:
-            #
-            #
-            #         product = get_product(kw["Url"])
-            #         start = time.time()
-            #         code = upload_image(product.image)
-            #         x = request.env['product.public.category'].sudo().search(
-            #             [('name', '=', 'Your Search History',)])
-            #
-            #         Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'SIze')])
-            #
-            #
-            #
-            #         end = time.time()
-            #         print(f"image loading Not in database {end - start}")
-            #
-            #         userid = request.env.user.id
-            #         start = time.time()
-            #         product_name = product.name
-            #         product_price = get_raw_price(product.price)
-            #         product_link = product.link
-            #         Product_image = base64.b64encode(get_img(code))
-            #
-            #         _product = request.env['product.template'].sudo().create({'name': product_name,
-            #                                                        'list_price':product_price,
-            #                                                        'product_description': product_link,
-            #                                                        'is_published': True,
-            #                                                        'image_1920': Product_image,
-            #                                                        'public_categ_ids': [(6, 0, [x.id])],
-            #                                                        'description': userid,
-            #
-            #
-            #                                                        })
-            #
-            #
-            #         val = request.env['product.attribute.value'].sudo().search([('name', '=', "S")])
-            #
-            #
-            #         ptal = request.env['product.template.attribute.line'].sudo().create({
-            #             'attribute_id': Attribute.id if Attribute else False,
-            #             'product_tmpl_id': _product.id,
-            #             'value_ids': [(6, 0, [val.id])],
-            #         })
-            #         _product.sudo().write({
-            #             'attribute_line_ids': [(6, 0, [ptal.id])]})
-            #
-            #
-            #
-            #         end = time.time()
-            #         print(f"adding to database not in database {end - start}")
-            #
-            #         return request.redirect("/shop/category/your-search-history-8")
-            # else:
-            #
-            #     return request.redirect("/Shein2egypt")
+            if 'https' in kw["Url"]:
+                adder = request.env['product.attribute.value']
+                # checking if its shein url
+                Link_of_product = kw["Url"]
+
+                checkLink = request.env['product.template'].search(
+                    [('product_description', '=', Link_of_product,)])
+
+                if checkLink:
+                    # if there is a product with same link we remove it from category so it doesn't show in
+                    # ALl search history part
+                    product = get_product(kw["Url"])
+                    start = time.time()
+                    code = upload_image(product.image)
+                    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+                    userid = request.env.user.id
+                    end = time.time()
+                    print(f"image loading in DB  {end - start}")
+                    start = time.time()
+
+                    _product = request.env['product.template'].sudo().create({'name': product.name,
+                                                                              'list_price': get_raw_price(
+                                                                                  product.price),
+                                                                              'product_description': product.link,
+                                                                              'is_published': True,
+                                                                              'image_1920': base64.b64encode(
+                                                                                  get_img(code)),
+                                                                              'description': userid
+                                                                              })
+                    counter = int(product.counterT)
+
+                    if counter:
+                        sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
+                                     product.size6, ]
+                        for x in sizezList:
+                            if 'Nothing' in x:
+                                break
+                            val = request.env['product.attribute.value'].sudo().search([('name', '=', x,
+                                                                                         )])
+                            adder = val + adder
+
+                            print(adder)
+                    ptal = request.env['product.template.attribute.line'].sudo().create({
+                        'attribute_id': Attribute.id if Attribute else False,
+                        'product_tmpl_id': _product.id,
+                        'value_ids': [(6, 0, [adder.id])],
+                    })
+                    _product.sudo().write({
+                        'attribute_line_ids': [(6, 0, [ptal.id])]})
+
+                    end = time.time()
+                    print(f"adding to database in DB {end - start}")
+
+                    return request.redirect("/shop/category/your-search-history-8")
+
+
+                else:
+
+                    product = get_product(kw["Url"])
+                    start = time.time()
+                    code = upload_image(product.image)
+                    x = request.env['product.public.category'].sudo().search(
+                        [('name', '=', 'Your Search History',)])
+
+                    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+
+                    end = time.time()
+                    print(f"image loading Not in database {end - start}")
+
+                    userid = request.env.user.id
+                    start = time.time()
+                    _product = request.env['product.template'].sudo().create({'name': product.name,
+                                                                              'list_price': get_raw_price(
+                                                                                  product.price),
+                                                                              'product_description': product.link,
+                                                                              'is_published': True,
+                                                                              'image_1920': base64.b64encode(
+                                                                                  get_img(code)),
+                                                                              'public_categ_ids': [(6, 0, [x.id])],
+                                                                              'description': userid,
+
+                                                                              })
+
+                    counter = int(product.counterT)
+                    if counter:
+                        sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
+                                     product.size6, ]
+                        for x in sizezList:
+                            if 'Nothing' in x:
+                                break
+                            val = request.env['product.attribute.value'].sudo().search([('name', '=', x,
+                                                                                         )])
+                            adder = val + adder
+
+                            print(adder)
+                    ptal = request.env['product.template.attribute.line'].sudo().create({
+                        'attribute_id': Attribute.id if Attribute else False,
+                        'product_tmpl_id': _product.id,
+                        'value_ids': [(6, 0, [adder.id])],
+                    })
+                    _product.sudo().write({
+                        'attribute_line_ids': [(6, 0, [ptal.id])]})
+
+                    end = time.time()
+                    print(f"adding to database not in database {end - start}")
+
+                    return request.redirect("/shop/category/your-search-history-8")
+            else:
+
+                return request.redirect("/Shein2egypt")
 
         return request.render('shein2egypt.Shein_page')
-
-
-
 
 
 class pos_website_sale(http.Controller):

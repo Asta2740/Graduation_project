@@ -188,8 +188,8 @@ class shein2egypt(http.Controller):
         if kw:
             Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
-            # checking if its shein url
-            if 'https' in kw["Url"]:
+            # checking if its shein url only or not and not a homepage
+            if 'https' in kw["Url"] and 'shein' in kw["Url"] and ".html?s" in kw["Url"]:
                 start = time.time()
 
                 Link_of_product = kw["Url"]

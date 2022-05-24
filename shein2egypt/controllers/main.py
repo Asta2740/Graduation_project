@@ -213,21 +213,33 @@ class shein2egypt(http.Controller):
                         valC = request.env['product.attribute.value'].sudo().search([('id', '=', qq,)])
                         if i == 0:
                             size_1 = valC
+                            if size_1:
+                                WhichSize = "F1"
 
                         if i == 1:
                             size_2 = valC
+                            if size_1:
+                                WhichSize = "F2"
 
                         if i == 2:
                             size_3 = valC
+                            if size_1:
+                                WhichSize = "F3"
 
                         if i == 3:
                             size_4 = valC
+                            if size_1:
+                                WhichSize = "F4"
 
                         if i == 4:
                             size_5 = valC
+                            if size_1:
+                                WhichSize = "F5"
 
                         if i == 5:
                             size_6 = valC
+                            if size_1:
+                                WhichSize = "F6"
 
                         i += 1
 
@@ -238,7 +250,7 @@ class shein2egypt(http.Controller):
                                                                               'image_1920': checkLink.image_1920,
                                                                               })
                     try:
-                        if size_1:
+                        if size_1 and "F1" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -248,7 +260,7 @@ class shein2egypt(http.Controller):
                     except:
                         print("all good")
                     try:
-                        if size_2:
+                        if size_2 and "F2" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -258,7 +270,7 @@ class shein2egypt(http.Controller):
                     except:
                         print("all good")
                     try:
-                        if size_3:
+                        if size_3 and "F3" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -268,7 +280,7 @@ class shein2egypt(http.Controller):
                     except:
                         print("all good")
                     try:
-                        if size_4:
+                        if size_4 and "F4" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -278,7 +290,7 @@ class shein2egypt(http.Controller):
                     except:
                         print("all good")
                     try:
-                        if size_5:
+                        if size_5 and "F5" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -289,7 +301,7 @@ class shein2egypt(http.Controller):
                         print("all good")
                     try:
 
-                        if size_6:
+                        if size_6 and "F6" in WhichSize:
                             ptal = request.env['product.template.attribute.line'].sudo().create({
                                 'attribute_id': Attribute.id if Attribute else False,
                                 'product_tmpl_id': _product.id,
@@ -301,17 +313,20 @@ class shein2egypt(http.Controller):
                         print("all good")
 
                     end = time.time()
-                    print(f"why the fk is it taking so long {end - start}")
+                    print(f"copy database done {end - start}")
                     return request.redirect("/shop/category/your-search-history-8")
-
+                # Copying ends here and it endsss in 2 secs :)
 
                 else:
                     start = time.time()
                     product = get_product(kw["Url"])
-                    #check this later
+
                     code = upload_image(product.image)
+                    # translation didnt work here so we added by id
+                    # not name since it was translated inside so it couldn't find the name
+
                     x = request.env['product.public.category'].sudo().search(
-                        [('name', '=', 'Your Search History',)])
+                        [('id', '=', '8',)])
 
                     Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
@@ -328,51 +343,64 @@ class shein2egypt(http.Controller):
                                                                               })
 
                     counter = int(product.counterT)
-                    print("1")
+                    WhichSize: str = None
+
                     if counter:
                         sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
                                      product.size6, ]
-                        print("2")
+
                         try:
                             for x in sizezList:
+
                                 val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
-                                print("3")
-                                if product.size1 in x:
+
+                                if product.size1 == x:
                                     size_1 = val
+                                    if size_1:
+                                        WhichSize = "F1"
 
-                                if product.size2 in x:
+                                if product.size2 == x:
                                     size_2 = val
+                                    if size_2:
+                                        WhichSize = "F2"
 
-                                if product.size3 in x:
+                                if product.size3 == x:
                                     size_3 = val
+                                    if size_3:
+                                        WhichSize = "F3"
 
-                                if product.size4 in x:
+                                if product.size4 == x:
                                     size_4 = val
+                                    if size_4:
+                                        WhichSize = "F4"
 
-                                if product.size5 in x:
+                                if product.size5 == x:
                                     size_5 = val
+                                    if size_5:
+                                        WhichSize = "F5"
 
-                                if product.size6 in x:
+                                if product.size6 == x:
                                     size_6 = val
-                                    print("4")
+                                    if size_6:
+                                        WhichSize = "F6"
+
 
                         except:
                             No_attribute = 0
-                            print("5")
+
                         try:
-                            if size_1:
-                                print("66")
+                            if size_1 and "F1" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
                                     'value_ids': [(6, 0, [size_1.id])],
                                 })
                                 _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                                print("6")
+
                         except:
                             print("aall good")
                         try:
-                            if size_2:
+                            if size_2 and "F2" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
@@ -382,7 +410,7 @@ class shein2egypt(http.Controller):
                         except:
                             print("aall good")
                         try:
-                            if size_3:
+                            if size_3 and "F3" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
@@ -392,18 +420,18 @@ class shein2egypt(http.Controller):
                         except:
                             print("aall good")
                         try:
-                            if size_4:
+                            if size_4 and "F4" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
                                     'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
                                 })
                                 _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                                print("7")
+
                         except:
                             print("aall good")
                         try:
-                            if size_5:
+                            if size_5 and "F5" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
@@ -414,7 +442,7 @@ class shein2egypt(http.Controller):
                             print("aall good")
                         try:
 
-                            if size_6:
+                            if size_6 and "F6" in WhichSize:
                                 ptal = request.env['product.template.attribute.line'].sudo().create({
                                     'attribute_id': Attribute.id if Attribute else False,
                                     'product_tmpl_id': _product.id,
@@ -428,6 +456,7 @@ class shein2egypt(http.Controller):
                     print(f"image loading Not in database {end - start}")
 
                     return request.redirect("/shop/category/your-search-history-8")
+
             else:
 
                 return request.redirect("/Shein2egypt")

@@ -59,79 +59,162 @@ def get_product(url):
     try:
         counter = counter + 1
 
-        size1 = driver.find_element_by_xpath(
-            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div/div').text
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size1 = 'Nothing'
 
-        if 'XS - L' in size1:
+        else:
+
             size1 = driver.find_element_by_xpath(
-                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div/div').text
+
+            if 'XS - L' in size1:
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size1 = 'Nothing'
+                else:
+                    size1 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
 
     except:
         size1 = 'Nothing'
         counter = counter - 1
 
-    if 'Nothing' in size1:
-        size2 = 'Nothing'
-        size3 = 'Nothing'
-        size4 = 'Nothing'
-        size5 = 'Nothing'
-        size6 = 'Nothing'
-    else:
-        try:
-            counter = counter + 1
+    # if 'Nothing' in size1:
+    #     size2 = 'Nothing'
+    #     size3 = 'Nothing'
+    #     size4 = 'Nothing'
+    #     size5 = 'Nothing'
+    #     size6 = 'Nothing'
+    # else:
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size2 = 'Nothing'
+
+        else:
 
             size2 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
             if size1 in size2 and size1 != 'L' and size2 != 'XL':
-                size2 = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-        except:
-            size2 = 'Nothing'
-            counter = counter - 1
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size2 = 'Nothing'
+                else:
+                    size2 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
+    except:
+        size2 = 'Nothing'
+        counter = counter - 1
 
-        try:
-            counter = counter + 1
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size3 = 'Nothing'
+
+        else:
             size3 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
             if size2 in size3 and size2 != 'L' and size3 != 'XL':
-                size3 = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
-        except:
-            size3 = 'Nothing'
-            counter = counter - 1
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size3 = 'Nothing'
 
-        try:
-            counter = counter + 1
+                else:
+                    size3 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
+    except:
+        size3 = 'Nothing'
+        counter = counter - 1
+
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size4 = 'Nothing'
+
+        else:
             size4 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
             if size3 in size4 and size3 != 'L' and size4 != 'XL':
-                size4 = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-        except:
-            counter = counter - 1
-            size4 = 'Nothing'
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size4 = 'Nothing'
 
-        try:
-            counter = counter + 1
+                else:
+                    size4 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
+    except:
+        counter = counter - 1
+        size4 = 'Nothing'
+
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size5 = 'Nothing'
+
+        else:
             size5 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
             if size4 in size5 and size4 != 'L' and size5 != 'XL':
-                size5 = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-        except:
-            counter = counter - 1
-            size5 = 'Nothing'
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size5 = 'Nothing'
 
-        try:
-            counter = counter + 1
+                else:
+                    size5 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
+    except:
+        counter = counter - 1
+        size5 = 'Nothing'
+
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size6 = 'Nothing'
+
+        else:
             size6 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
             if size5 in size6 and size5 != 'L' and size6 != 'XL':
-                size6 = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
-        except:
-            counter = counter - 1
-            size6 = 'Nothing'
+                check_if_sold_out = driver.find_element_by_xpath(
+                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
+                    "class")
+                if 'radio_soldout' in check_if_sold_out:
+                    size6 = 'Nothing'
+
+                else:
+                    size6 = driver.find_element_by_xpath(
+                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
+    except:
+        counter = counter - 1
+        size6 = 'Nothing'
     counterT = str(counter)
 
     driver.quit()
@@ -295,6 +378,14 @@ def get_img(code):
     return requests.get(f'https://angelo666.pythonanywhere.com/img/{code}/').content
 
 
+def put_colour_in_name(name, colour):
+    if "Fixed" in colour:
+        colour_name = name
+    else:
+        colour_name = name + " color:" + colour
+    return colour_name
+
+
 class shein2egypt(http.Controller):
 
     @http.route('/Shein2egypt', website=True, auth='user')
@@ -444,7 +535,10 @@ class shein2egypt(http.Controller):
 
                     Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
-                    _product = request.env['product.template'].sudo().create({'name': product.name,
+
+                    product_name = put_colour_in_name(product.name, product.color)
+
+                    _product = request.env['product.template'].sudo().create({'name': product_name,
                                                                               'list_price': get_raw_price(
                                                                                   product.price),
                                                                               'product_description': product.link,
@@ -462,38 +556,46 @@ class shein2egypt(http.Controller):
                     if counter:
                         sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
                                      product.size6, ]
+                        for qqq in sizezList:
+                            if 'Nothing' in sizezList:
+                                sizezList.remove('Nothing')
+
+                        sizezList_odoo = sizezList
+                        sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
+                        print(sizezList_odoo)
+                        print(sizezList)
 
                         try:
                             for x in sizezList:
 
                                 val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
 
-                                if product.size1 == x:
+                                if sizezList_odoo[0] == x:
                                     size_1 = val
                                     if size_1:
                                         WhichSize = "F1"
 
-                                if product.size2 == x:
+                                if sizezList_odoo[1] == x:
                                     size_2 = val
                                     if size_2:
                                         WhichSize = "F2"
 
-                                if product.size3 == x:
+                                if sizezList_odoo[2] == x:
                                     size_3 = val
                                     if size_3:
                                         WhichSize = "F3"
 
-                                if product.size4 == x:
+                                if sizezList_odoo[3] == x:
                                     size_4 = val
                                     if size_4:
                                         WhichSize = "F4"
 
-                                if product.size5 == x:
+                                if sizezList_odoo[4] == x:
                                     size_5 = val
                                     if size_5:
                                         WhichSize = "F5"
 
-                                if product.size6 == x:
+                                if sizezList_odoo[5] == x:
                                     size_6 = val
                                     if size_6:
                                         WhichSize = "F6"

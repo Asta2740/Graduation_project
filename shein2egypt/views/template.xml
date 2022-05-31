@@ -16,6 +16,22 @@
                 <t t-set="title">Shein2Egypt</t>
                 <div class="oe_structure">
                     <div class="container">
+                        <!--<script>
+                            // (A) FLAG FOR "ALREADY CLICKED".
+                            var clicked = false;
+
+                            // (B) FUNCTION - WILL ONLY RUN IF NOT CLICKED
+                            function doSomething () { if (!clicked) {
+                            // (B1) SET CLICKED TO TRUE
+                            clicked = true;
+
+                            // (B2) DO YOUR PROCESSING HERE
+                            alert("Something is done!");
+
+                            // (B3) RE-ENABLE AFTER PROCESSING IF YOU WANT
+                            // clicked = false;
+                            }}
+                        </script>-->
 
                         <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/nav.css"/>
                         <link rel="stylesheet" type="text/css" href="shein2egypt/static/scss/shein2egypt.css"/>
@@ -35,7 +51,8 @@
                                     <div class="form">
                                         <input type="text" class="search-box-shein" id="Url" name="Url"
                                                placeholder="Product link here (FULL URL)"/>
-                                        <button class="search-btn-shein">search</button>
+                                        <button class="search-btn-shein">search
+                                        </button>
                                     </div>
                                 </br>
                                 <div class="shein-img">
@@ -46,7 +63,6 @@
 
                             </div>
                         </form>
-
 
 
                     </div>

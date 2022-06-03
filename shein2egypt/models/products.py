@@ -17,15 +17,13 @@ class Product:
     size6: str = None
     counterT: str = None
 
-
-def updatexs(url):
+def product_update(Url):
     counter = 0
-
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     driver = uc.Chrome(options=options)
-    driver.get(url)
+    driver.get(Url)
     try:
         price = driver.find_element_by_xpath(
             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[2]/div/div/span').text
@@ -79,7 +77,7 @@ def updatexs(url):
 
             size2 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
-            if size1 in size2 and size1 != 'L' and size2 != 'XL':
+            if size1 in size2 and size1 != 'L' and size2 != 'XL' and size1 != 'XL' and size2 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
                     "class")
@@ -103,7 +101,7 @@ def updatexs(url):
         else:
             size3 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-            if size2 in size3 and size2 != 'L' and size3 != 'XL':
+            if size2 in size3 and size2 != 'L' and size3 != 'XL' and size2 != 'XL' and size3 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
                     "class")
@@ -153,7 +151,7 @@ def updatexs(url):
         else:
             size5 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-            if size4 in size5 and size4 != 'L' and size5 != 'XL':
+            if size4 in size5 and size4 != 'L' and size5 != 'XL' and size4 != 'XL' and size5 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
                     "class")
@@ -178,7 +176,7 @@ def updatexs(url):
         else:
             size6 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-            if size5 in size6 and size5 != 'L' and size6 != 'XL':
+            if size5 in size6 and size5 != 'L' and size6 != 'XL' and size5 != 'XL' and size6 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
                     "class")
@@ -197,8 +195,6 @@ def updatexs(url):
 
     return Product(price=price, size1=size1, size2=size2, size3=size3,
                    size4=size4, size5=size5, size6=size6, counterT=counter)
-
-
 def get_raw_price(string):
     if '€' in string:
         convert_price = 19.10
@@ -226,11 +222,13 @@ class ProductsTemplate(models.Model):
     Counter = fields.Char(string="Counter")
 
     # you will see scrapper name in gui as label name , if you dont give any name it will be name
+
     def Update_products(self):
         intId = self.ids
+
         RR = request.env['product.template']
         for count in intId:
-            counter =request.env['product.template'].sudo().search([("id","=",count)])
+            counter = request.env['product.template'].sudo().search([("id", "=", count)])
             RR = RR + counter
 
         print(RR)
@@ -244,7 +242,7 @@ class ProductsTemplate(models.Model):
             print(x.name)
             if Products_idz:
 
-                product = updatexs(Products_idz)
+                product = product_update(Products_idz)
 
                 x.sudo().write({'list_price': get_raw_price(product.price)})
                 name = x.name
@@ -498,6 +496,5 @@ class ProductsTemplate(models.Model):
                     except:
                         pass
                 y = x.name
-
 
         # request.redirect("/shop/category/update-12")

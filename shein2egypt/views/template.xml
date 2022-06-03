@@ -53,6 +53,8 @@
                                                placeholder="Product link here (FULL URL)"/>
                                         <button class="search-btn-shein">search
                                         </button>
+
+                                        <t t-out="foo"/>
                                     </div>
                                 </br>
                                 <div class="shein-img">

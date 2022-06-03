@@ -11,6 +11,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 
 
+# https://www.odoo.com/documentation/master/developer/reference/backend/http.html
+
 @dataclass
 class Product:
     name: str = None
@@ -26,6 +28,126 @@ class Product:
     size5: str = None
     size6: str = None
     counterT: str = None
+
+
+def put_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6, _product):
+    if counter:
+        WhichSize: str = None
+        Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+        sizezList = [productS1, productS2, productS3, productS4,
+                     productS5, productS6, ]
+        for qqq in sizezList:
+            if 'Nothing' in sizezList:
+                sizezList.remove('Nothing')
+
+        sizezList_odoo = sizezList
+        sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
+        print(sizezList_odoo)
+        print(sizezList)
+
+        try:
+            for x in sizezList:
+
+                val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
+
+                if sizezList_odoo[0] == x:
+                    size_1 = val
+                    if size_1:
+                        WhichSize = "F1"
+
+                if sizezList_odoo[1] == x:
+                    size_2 = val
+                    if size_2:
+                        WhichSize = "F2"
+
+                if sizezList_odoo[2] == x:
+                    size_3 = val
+                    if size_3:
+                        WhichSize = "F3"
+
+                if sizezList_odoo[3] == x:
+                    size_4 = val
+                    if size_4:
+                        WhichSize = "F4"
+
+                if sizezList_odoo[4] == x:
+                    size_5 = val
+                    if size_5:
+                        WhichSize = "F5"
+
+                if sizezList_odoo[5] == x:
+                    size_6 = val
+                    if size_6:
+                        WhichSize = "F6"
+
+
+        except:
+            No_attribute = 0
+
+        try:
+            if size_1 and "F1" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [(6, 0, [size_1.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+
+        except:
+            pass
+        try:
+            if size_2 and "F2" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [(6, 0, [size_1.id, size_2.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+        except:
+            pass
+        try:
+            if size_3 and "F3" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+        except:
+            pass
+        try:
+            if size_4 and "F4" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+
+        except:
+            pass
+        try:
+            if size_5 and "F5" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+        except:
+            pass
+        try:
+
+            if size_6 and "F6" in WhichSize:
+                ptal = request.env['product.template.attribute.line'].sudo().create({
+                    'attribute_id': Attribute.id if Attribute else False,
+                    'product_tmpl_id': _product.id,
+                    'value_ids': [
+                        (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
+                })
+                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+        except:
+            pass
 
 
 def get_product(url):
@@ -103,7 +225,7 @@ def get_product(url):
 
             size2 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
-            if size1 in size2 and size1 != 'L' and size2 != 'XL':
+            if size1 in size2 and size1 != 'L' and size2 != 'XL' and size1 != 'XL' and size2 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
                     "class")
@@ -127,7 +249,7 @@ def get_product(url):
         else:
             size3 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-            if size2 in size3 and size2 != 'L' and size3 != 'XL':
+            if size2 in size3 and size2 != 'L' and size3 != 'XL' and size2 != 'XL' and size3 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
                     "class")
@@ -177,7 +299,7 @@ def get_product(url):
         else:
             size5 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-            if size4 in size5 and size4 != 'L' and size5 != 'XL':
+            if size4 in size5 and size4 != 'L' and size5 != 'XL' and size4 != 'XL' and size5 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
                     "class")
@@ -202,7 +324,7 @@ def get_product(url):
         else:
             size6 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-            if size5 in size6 and size5 != 'L' and size6 != 'XL':
+            if size5 in size6 and size5 != 'L' and size6 != 'XL' and size5 != 'XL' and size6 != 'XXL':
                 check_if_sold_out = driver.find_element_by_xpath(
                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
                     "class")
@@ -470,7 +592,7 @@ class shein2egypt(http.Controller):
             Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
             # checking if its shein url only or not and not a homepage
-            if 'https' in kw["Url"] and 'shein' in kw["Url"] and ".html?s" in kw["Url"]:
+            if 'https' in kw["Url"] and 'shein' in kw["Url"] and ".html" in kw["Url"]:
                 start = time.time()
 
                 Link_of_product = kw["Url"]
@@ -478,6 +600,7 @@ class shein2egypt(http.Controller):
                 checkLink = request.env['product.template'].search(
                     [('product_description', 'like', Link_of_product[11:120]),
                      ('description', '=', '<p>first item</p>')])
+                print(type(checkLink))
 
                 print(Link_of_product[12:110])
 
@@ -609,9 +732,6 @@ class shein2egypt(http.Controller):
                     x = request.env['product.public.category'].sudo().search(
                         [('id', '=', '8',)])
 
-                    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
-
-
                     product_name = put_colour_in_name(product.name, product.color)
 
                     _product = request.env['product.template'].sudo().create({'name': product_name,
@@ -628,123 +748,9 @@ class shein2egypt(http.Controller):
                     print(_product.id)
 
                     counter = int(product.counterT)
-                    WhichSize: str = None
 
-                    if counter:
-                        sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
-                                     product.size6, ]
-                        for qqq in sizezList:
-                            if 'Nothing' in sizezList:
-                                sizezList.remove('Nothing')
-
-                        sizezList_odoo = sizezList
-                        sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
-                        print(sizezList_odoo)
-                        print(sizezList)
-
-                        try:
-                            for x in sizezList:
-
-                                val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
-
-                                if sizezList_odoo[0] == x:
-                                    size_1 = val
-                                    if size_1:
-                                        WhichSize = "F1"
-
-                                if sizezList_odoo[1] == x:
-                                    size_2 = val
-                                    if size_2:
-                                        WhichSize = "F2"
-
-                                if sizezList_odoo[2] == x:
-                                    size_3 = val
-                                    if size_3:
-                                        WhichSize = "F3"
-
-                                if sizezList_odoo[3] == x:
-                                    size_4 = val
-                                    if size_4:
-                                        WhichSize = "F4"
-
-                                if sizezList_odoo[4] == x:
-                                    size_5 = val
-                                    if size_5:
-                                        WhichSize = "F5"
-
-                                if sizezList_odoo[5] == x:
-                                    size_6 = val
-                                    if size_6:
-                                        WhichSize = "F6"
-
-
-                        except:
-                            No_attribute = 0
-
-                        try:
-                            if size_1 and "F1" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [(6, 0, [size_1.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                        except:
-                            pass
-                        try:
-                            if size_2 and "F2" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [(6, 0, [size_1.id, size_2.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                        except:
-                            pass
-                        try:
-                            if size_3 and "F3" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                        except:
-                            pass
-                        try:
-                            if size_4 and "F4" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                        except:
-                            pass
-                        try:
-                            if size_5 and "F5" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                        except:
-                            pass
-                        try:
-
-                            if size_6 and "F6" in WhichSize:
-                                ptal = request.env['product.template.attribute.line'].sudo().create({
-                                    'attribute_id': Attribute.id if Attribute else False,
-                                    'product_tmpl_id': _product.id,
-                                    'value_ids': [
-                                        (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
-                                })
-                                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                        except:
-                            pass
+                    put_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
+                              product.size6, _product)
 
                     end = time.time()
                     print(f"image loading Not in database {end - start}")
@@ -752,6 +758,7 @@ class shein2egypt(http.Controller):
                     return request.redirect("/shop/category/your-search-history-8")
 
             else:
+
 
                 return request.redirect("/Shein2egypt")
 

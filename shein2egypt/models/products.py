@@ -17,6 +17,7 @@ class Product:
     size6: str = None
     counterT: str = None
 
+
 def product_update(Url):
     counter = 0
     options = Options()
@@ -195,6 +196,8 @@ def product_update(Url):
 
     return Product(price=price, size1=size1, size2=size2, size3=size3,
                    size4=size4, size5=size5, size6=size6, counterT=counter)
+
+
 def get_raw_price(string):
     if '€' in string:
         convert_price = 19.10
@@ -222,9 +225,24 @@ class ProductsTemplate(models.Model):
     Counter = fields.Char(string="Counter")
 
     # you will see scrapper name in gui as label name , if you dont give any name it will be name
+    def Archived_update(self):
+        intId = self.ids
+        category_implementation = request.env['product.public.category'].sudo().search(
+            [('id', '=', '14',)])
+
+        RR = request.env['product.template']
+        for count in intId:
+            counter = request.env['product.template'].sudo().search([("id", "=", count)])
+            RR = RR + counter
+
+        for x in RR:
+            x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
+
 
     def Update_products(self):
         intId = self.ids
+        category_implementation = request.env['product.public.category'].sudo().search(
+            [('id', '=', '14',)])
 
         RR = request.env['product.template']
         for count in intId:
@@ -245,6 +263,8 @@ class ProductsTemplate(models.Model):
                 product = product_update(Products_idz)
 
                 x.sudo().write({'list_price': get_raw_price(product.price)})
+
+
                 name = x.name
 
                 Updating_samexs = request.env['product.template'].sudo().search(
@@ -374,6 +394,7 @@ class ProductsTemplate(models.Model):
                 for xy in Updating_samexs:
 
                     xy.sudo().write({'list_price': get_raw_price(product.price)})
+                    x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
 
                     Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
                     counter = int(product.counterT)

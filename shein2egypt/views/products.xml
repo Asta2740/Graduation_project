@@ -23,6 +23,8 @@
             <header>
                 <button name="Update_products" string="Update Products" class="btn-primary"
                         type="object"/>
+                <button name="Archived_update" string="Update_archived" class="btn-primary"
+                        type="object"/>
 
             </header>
 

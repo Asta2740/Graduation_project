@@ -646,12 +646,15 @@ class shein2egypt(http.Controller):
                                 WhichSize = "F6"
 
                         i += 1
-
+                    category_implementation = request.env['product.public.category'].sudo().search(
+                            [('id', '=', '14',)])
                     _product = request.env['product.template'].sudo().create({'name': checkLink.name,
                                                                               'list_price': checkLink.list_price,
                                                                               'product_description': checkLink.product_description,
                                                                               'is_published': True,
                                                                               'image_1920': checkLink.image_1920,
+                                                                              'public_categ_ids': [
+                                                                                  (6, 0, [category_implementation.id])]
                                                                               })
                     try:
                         if size_1 and "F1" in WhichSize:
@@ -718,7 +721,7 @@ class shein2egypt(http.Controller):
 
                     end = time.time()
                     print(f"copy database done {end - start}")
-                    return request.redirect("/shop/category/your-search-history-8")
+                    return request.redirect("/shop/category/personal-shop-15")
                 # Copying ends here and it endsss in 2 secs :)
 
                 else:
@@ -729,7 +732,7 @@ class shein2egypt(http.Controller):
                     # translation didnt work here so we added by id
                     # not name since it was translated inside so it couldn't find the name
 
-                    x = request.env['product.public.category'].sudo().search(
+                    category_implementation = request.env['product.public.category'].sudo().search(
                         [('id', '=', '8',)])
 
                     product_name = put_colour_in_name(product.name, product.color)
@@ -741,7 +744,8 @@ class shein2egypt(http.Controller):
                                                                               'is_published': True,
                                                                               'image_1920': base64.b64encode(
                                                                                   get_img(code)),
-                                                                              'public_categ_ids': [(6, 0, [x.id])],
+                                                                              'public_categ_ids': [
+                                                                                  (6, 0, [category_implementation.id])],
                                                                               'description': 'first item',
 
                                                                               })
@@ -755,10 +759,9 @@ class shein2egypt(http.Controller):
                     end = time.time()
                     print(f"image loading Not in database {end - start}")
 
-                    return request.redirect("/shop/category/your-search-history-8")
+                    return request.redirect("/shop/category/personal-shop-15")
 
             else:
-
 
                 return request.redirect("/Shein2egypt")
 

@@ -23,6 +23,7 @@
             </form>
         </field>
     </record>
+
     <!--list view-->
     <record id="inquiry_tree" model="ir.ui.view">
         <field name="name">recent.inquiry.tree</field>

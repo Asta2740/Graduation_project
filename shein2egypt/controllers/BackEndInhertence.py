@@ -467,12 +467,14 @@ class WebsiteSale_inhernet(WebsiteSale):
                                                                                        order=self._get_search_order(
                                                                                            post), options=options)
         # removing the excess pages
+
         if category:
+
             # for personal store
-            if request.env['product.public.category'].sudo().search([('id', '=', '8')]) in category:
+            if request.env['product.public.category'].sudo().search([('id', '=', '15')]) in category:
                 RR = request.env['product.template'].sudo().search(
-                    [('responsible_id', '!=', request.env.user.id,)])
-                product_count = product_count - len(RR)
+                    [('responsible_id', '=', request.env.user.id,)])
+                product_count = len(RR)
 
 
 
@@ -538,7 +540,7 @@ class WebsiteSale_inhernet(WebsiteSale):
         # youssef category selection
         if category:
             # for personal store
-            if request.env['product.public.category'].sudo().search([('id', '=', '8')]) in category:
+            if request.env['product.public.category'].sudo().search([('id', '=', '15')]) in category:
 
                     products = request.env['product.template'].sudo().search(
                         [('responsible_id', '=', request.env.user.id,

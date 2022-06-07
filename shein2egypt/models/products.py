@@ -40,25 +40,44 @@ class Product:
     size4: str = None
     size5: str = None
     size6: str = None
+    size7: str = None
+    size8: str = None
+    size9: str = None
+    size10: str = None
+    size11: str = None
+    size12: str = None
+    size13: str = None
+    size14: str = None
+    size15: str = None
+    size16: str = None
+    size17: str = None
+    size18: str = None
     counterT: str = None
 
 
-def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6, _product):
+def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6,
+                 productS7, productS8, productS9, productS10, productS11, productS12,
+                 productS13, productS14, productS15, productS16, productS17, productS18,
+                 _product):
     if counter:
         Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
         sizesList = [productS1, productS2, productS3, productS4,
-                     productS5, productS6, ]
+                     productS5, productS6,
+                     productS7, productS8, productS9, productS10, productS11, productS12,
+                     productS13, productS14, productS15, productS16, productS17, productS18,
+                     ]
         _product = _product
         # for rotation in sizesList:
         #     if 'Nothing' in sizesList:
         #         sizesList.remove('Nothing')
-        print(sizesList)
+
         sizing = set_avilable_sizes(sizesList)
 
         Write_sizes(sizing, Attribute, _product)
 
 
 def set_avilable_sizes(sizesList):
+    print(sizesList)
     sizesList2 = []
     for x in sizesList:
         val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
@@ -69,10 +88,16 @@ def set_avilable_sizes(sizesList):
     return sizesList2
 
 
-def check_avilable_sizes(productS1, productS2, productS3, productS4, productS5, productS6, ):
+def check_avilable_sizes(productS1, productS2, productS3, productS4, productS5, productS6,
+                         productS7, productS8, productS9, productS10, productS11, productS12,
+                         productS13, productS14, productS15, productS16, productS17, productS18,
+                         ):
     Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
     sizesList = [productS1, productS2, productS3, productS4,
-                 productS5, productS6, ]
+                 productS5, productS6,
+                 productS7, productS8, productS9, productS10, productS11, productS12,
+                 productS13, productS14, productS15, productS16, productS17, productS18,
+                 ]
     for rotation in sizesList:
         if 'Nothing' in sizesList:
             sizesList.remove('Nothing')
@@ -134,33 +159,18 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size1 = 'Nothing'
+            counter = counter - 1
 
         else:
 
             size1 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div/div').text
 
-            if 'XS - L' in size1:
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size1 = 'Nothing'
-                else:
-                    size1 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
 
     except:
         size1 = 'Nothing'
         counter = counter - 1
 
-    # if 'Nothing' in size1:
-    #     size2 = 'Nothing'
-    #     size3 = 'Nothing'
-    #     size4 = 'Nothing'
-    #     size5 = 'Nothing'
-    #     size6 = 'Nothing'
-    # else:
     try:
         counter = counter + 1
         check_if_sold_out = driver.find_element_by_xpath(
@@ -168,20 +178,13 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size2 = 'Nothing'
+            counter = counter - 1
 
         else:
 
             size2 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
-            if size1 in size2 and size1 != 'L' and size2 != 'XL' and size1 != 'XL' and size2 != 'XXL':
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size2 = 'Nothing'
-                else:
-                    size2 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
+
     except:
         size2 = 'Nothing'
         counter = counter - 1
@@ -193,20 +196,12 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size3 = 'Nothing'
+            counter = counter - 1
 
         else:
             size3 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-            if size2 in size3 and size2 != 'L' and size3 != 'XL' and size2 != 'XL' and size3 != 'XXL':
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size3 = 'Nothing'
 
-                else:
-                    size3 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
     except:
         size3 = 'Nothing'
         counter = counter - 1
@@ -218,20 +213,12 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size4 = 'Nothing'
+            counter = counter - 1
 
         else:
             size4 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
-            if size3 in size4 and size3 != 'L' and size4 != 'XL':
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size4 = 'Nothing'
 
-                else:
-                    size4 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
     except:
         counter = counter - 1
         size4 = 'Nothing'
@@ -243,20 +230,12 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size5 = 'Nothing'
+            counter = counter - 1
 
         else:
             size5 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-            if size4 in size5 and size4 != 'L' and size5 != 'XL' and size4 != 'XL' and size5 != 'XXL':
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size5 = 'Nothing'
 
-                else:
-                    size5 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
     except:
         counter = counter - 1
         size5 = 'Nothing'
@@ -268,29 +247,243 @@ def product_update(Url):
             "class")
         if 'radio_soldout' in check_if_sold_out:
             size6 = 'Nothing'
+            counter = counter - 1
 
         else:
             size6 = driver.find_element_by_xpath(
                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-            if size5 in size6 and size5 != 'L' and size6 != 'XL' and size5 != 'XL' and size6 != 'XXL':
-                check_if_sold_out = driver.find_element_by_xpath(
-                    '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
-                    "class")
-                if 'radio_soldout' in check_if_sold_out:
-                    size6 = 'Nothing'
 
-                else:
-                    size6 = driver.find_element_by_xpath(
-                        '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
+
     except:
         counter = counter - 1
         size6 = 'Nothing'
     counterT = str(counter)
 
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size7 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size7 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size7 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[8]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size8 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size8 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[8]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size8 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[9]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size9 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size9 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[9]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size9 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[10]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size10 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size10 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[10]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size10 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[11]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size11 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size11 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[11]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size11 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[12]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size12 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size12 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[12]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size12 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[13]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size13 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size13 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[13]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size13 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[14]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size14 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size14 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[14]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size14 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[15]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size15 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size15 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[15]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size15 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[16]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size16 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size16 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[16]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size16 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[17]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size17 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size17 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[17]/span/div/div').text
+
+
+    except:
+        counter = counter - 1
+        size17 = 'Nothing'
+    counterT = str(counter)
+    try:
+        counter = counter + 1
+        check_if_sold_out = driver.find_element_by_xpath(
+            '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[18]/span/div').get_attribute(
+            "class")
+        if 'radio_soldout' in check_if_sold_out:
+            size18 = 'Nothing'
+            counter = counter - 1
+
+        else:
+            size18 = driver.find_element_by_xpath(
+                '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[18]/span/div/div').text
+
+    except:
+        counter = counter - 1
+        size18 = 'Nothing'
+    counterT = str(counter)
+
     driver.quit()
 
     return Product(price=price, size1=size1, size2=size2, size3=size3,
-                   size4=size4, size5=size5, size6=size6, counterT=counter)
+                   size4=size4, size5=size5, size6=size6,
+                   size7=size7, size8=size8, size9=size9,
+                   size10=size10, size11=size11, size12=size12,
+                   size13=size13, size14=size14, size15=size15,
+                   size16=size16, size17=size17, size18=size18,
+                   counterT=counter)
 
 
 def get_raw_price(string):
@@ -327,21 +520,27 @@ class ProductsTemplate(models.Model):
     # you will see scrapper name in gui as label name , if you dont give any name it will be name
     def Archived_update(self):
         intId = self.ids
+        'description', '=', '<p>first item</p>'
+
+
+
         category_implementation = request.env['product.public.category'].sudo().search(
-            [('id', '=', '14',)])
+            [('id', '=', '8',)])
 
         Products_List = request.env['product.template']
         for count in intId:
             counter = request.env['product.template'].sudo().search([("id", "=", count)])
             Products_List = Products_List + counter
 
+        RR = request.env['product.template'].sudo().search(
+            [('description', '=', '<p>first item</p>')])
+        Products_List = RR
+
         for x in Products_List:
             x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
 
     def Update_products(self):
         intId = self.ids
-        category_implementation = request.env['product.public.category'].sudo().search(
-            [('id', '=', '14',)])
 
         Products_List = request.env['product.template']
         for count in intId:
@@ -368,17 +567,36 @@ class ProductsTemplate(models.Model):
                 Updating_Child_products = request.env['product.template'].sudo().search(
                     [('name', '=', name)])
                 # good till here
+                Sold_out_check = product.counterT
+                if Sold_out_check:
+                    Remove_product = False
+                else:
+                    Remove_product = True
+                print(Remove_product)
+                if not Remove_product:
 
-                Define_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
-                             product.size6, x)
+                    Define_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
+                                 product.size6,
+                                 product.size7, product.size8, product.size9, product.size10, product.size11,
+                                 product.size12,
+                                 product.size13, product.size14, product.size15, product.size16, product.size17,
+                                 product.size18,
+                                 x)
+                    for xy in Updating_Child_products:
+                        xy.sudo().write({'list_price': get_raw_price(product.price)})
 
-                for xy in Updating_Child_products:
-                    xy.sudo().write({'list_price': get_raw_price(product.price)})
-                    x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
-
-                    Define_sizes(counter, product.size1, product.size2, product.size3, product.size4,
-                                 product.size5,
-                                 product.size6, xy)
+                        Define_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
+                                     product.size6,
+                                     product.size7, product.size8, product.size9, product.size10, product.size11,
+                                     product.size12,
+                                     product.size13, product.size14, product.size15, product.size16, product.size17,
+                                     product.size18,
+                                     xy)
+                else:
+                    # removing it from interface
+                    x.sudo().write({'is_published': False})
+                    for xy in Updating_Child_products:
+                        xy.sudo().write({'is_published': False})
 
                 y = x.name
 

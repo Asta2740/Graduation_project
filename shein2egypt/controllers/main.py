@@ -1,7 +1,6 @@
 import base64
 import urllib
 import requests
-import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from dataclasses import dataclass
 from odoo import http
@@ -9,9 +8,30 @@ from odoo.http import request
 import time
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
+import math
+from tkinter import *
+import tkinter as tk
+from tkinter import ttk
 
 
 # https://www.odoo.com/documentation/master/developer/reference/backend/http.html
+
+class RealTimeCurrencyConverter():
+    def __init__(self, url):
+        self.data = requests.get(url).json()
+        self.currencies = self.data['rates']
+
+    def convert(self, from_currency, to_currency, amount):
+        initial_amount = amount
+        # first convert it into USD if it is not in USD.
+        # because our base currency is USD
+        if from_currency != 'USD':
+            amount = amount / self.currencies[from_currency]
+
+            # limiting the precision to 4 decimal places
+        amount = round(amount * self.currencies[to_currency], 4)
+        return amount
+
 
 @dataclass
 class Product:
@@ -27,127 +47,90 @@ class Product:
     size4: str = None
     size5: str = None
     size6: str = None
+    size7: str = None
+    size8: str = None
+    size9: str = None
+    size10: str = None
+    size11: str = None
+    size12: str = None
+    size13: str = None
+    size14: str = None
+    size15: str = None
+    size16: str = None
+    size17: str = None
+    size18: str = None
     counterT: str = None
 
 
-def put_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6, _product):
+
+def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6, _product):
     if counter:
-        WhichSize: str = None
         Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
-        sizezList = [productS1, productS2, productS3, productS4,
+        sizesList = [productS1, productS2, productS3, productS4,
                      productS5, productS6, ]
-        for qqq in sizezList:
-            if 'Nothing' in sizezList:
-                sizezList.remove('Nothing')
+        _product = _product
+        # for rotation in sizesList:
+        #     if 'Nothing' in sizesList:
+        #         sizesList.remove('Nothing')
+        print(sizesList)
+        sizing = set_avilable_sizes(sizesList)
 
-        sizezList_odoo = sizezList
-        sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
-        print(sizezList_odoo)
-        print(sizezList)
-
-        try:
-            for x in sizezList:
-
-                val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
-
-                if sizezList_odoo[0] == x:
-                    size_1 = val
-                    if size_1:
-                        WhichSize = "F1"
-
-                if sizezList_odoo[1] == x:
-                    size_2 = val
-                    if size_2:
-                        WhichSize = "F2"
-
-                if sizezList_odoo[2] == x:
-                    size_3 = val
-                    if size_3:
-                        WhichSize = "F3"
-
-                if sizezList_odoo[3] == x:
-                    size_4 = val
-                    if size_4:
-                        WhichSize = "F4"
-
-                if sizezList_odoo[4] == x:
-                    size_5 = val
-                    if size_5:
-                        WhichSize = "F5"
-
-                if sizezList_odoo[5] == x:
-                    size_6 = val
-                    if size_6:
-                        WhichSize = "F6"
+        Write_sizes(sizing, Attribute, _product)
 
 
-        except:
-            No_attribute = 0
+def set_avilable_sizes(sizesList):
+    sizesList2 = []
+    for x in sizesList:
+        val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
 
-        try:
-            if size_1 and "F1" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [(6, 0, [size_1.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+        if val:
+            sizesList2.append(val)
 
-        except:
-            pass
-        try:
-            if size_2 and "F2" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [(6, 0, [size_1.id, size_2.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-        except:
-            pass
-        try:
-            if size_3 and "F3" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-        except:
-            pass
-        try:
-            if size_4 and "F4" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+    return sizesList2
 
-        except:
-            pass
-        try:
-            if size_5 and "F5" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-        except:
-            pass
-        try:
 
-            if size_6 and "F6" in WhichSize:
-                ptal = request.env['product.template.attribute.line'].sudo().create({
-                    'attribute_id': Attribute.id if Attribute else False,
-                    'product_tmpl_id': _product.id,
-                    'value_ids': [
-                        (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
-                })
-                _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-        except:
-            pass
+def check_avilable_sizes(productS1, productS2, productS3, productS4, productS5, productS6, ):
+    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+    sizesList = [productS1, productS2, productS3, productS4,
+                 productS5, productS6, ]
+    for rotation in sizesList:
+        if 'Nothing' in sizesList:
+            sizesList.remove('Nothing')
+
+    for x in sizesList:
+        if 'Nothing' in x or '-' in x:
+            continue
+        else:
+            val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
+            if not val:
+                request.env['product.attribute.value'].sudo().create({'name': x,
+                                                                      'attribute_id': Attribute.id})
+
+
+def Write_sizes(sizes_id_separte_odoo_form, Attribute, _product, ):
+    # check is it copying or new item
+    if all([isinstance(item, int) for item in sizes_id_separte_odoo_form]):
+        # copy
+        sizes_id_int_form = sizes_id_separte_odoo_form
+    else:
+        # new
+        sizes_id_separte_odoo_form = sizes_id_separte_odoo_form
+        print(sizes_id_separte_odoo_form)
+
+        sizes_id_int_form = []
+
+        for adding_ids in sizes_id_separte_odoo_form:
+            x = adding_ids.id
+            if x:
+                sizes_id_int_form.append(adding_ids.id)
+        print(sizes_id_int_form)
+
+    ptal = request.env['product.template.attribute.line'].sudo().create({
+        'attribute_id': Attribute.id if Attribute else False,
+        'product_tmpl_id': _product.id,
+        'value_ids': [(6, 0, sizes_id_int_form)],
+    })
+    _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
 
 
 def get_product(url):
@@ -206,13 +189,6 @@ def get_product(url):
         size1 = 'Nothing'
         counter = counter - 1
 
-    # if 'Nothing' in size1:
-    #     size2 = 'Nothing'
-    #     size3 = 'Nothing'
-    #     size4 = 'Nothing'
-    #     size5 = 'Nothing'
-    #     size6 = 'Nothing'
-    # else:
     try:
         counter = counter + 1
         check_if_sold_out = driver.find_element_by_xpath(
@@ -345,217 +321,26 @@ def get_product(url):
                    size4=size4, size5=size5, size6=size6, counterT=counter)
 
 
-# def get_product(url):
-#     counter = 0
-#
-#     options = Options()
-#     # options.add_argument('--headless')
-#     options.add_argument('--disable-gpu')
-#     driver = uc.Chrome(options=options)
-#     driver.get(url)
-#     name = driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/h1').text
-#     try:
-#         price = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[2]/div/div/span').text
-#     except:
-#         price = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/div[3]/div/div/span').text
-#     try:
-#         color = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div[1]/div[1]/span/span').text
-#     except:
-#         color = 'Fixed'
-#     link = url
-#     try:
-#         image = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[1]/div[1]/div[2]/div/div[1]/div[2]/img').get_attribute(
-#             'src')
-#     except:
-#         image = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[1]/div[1]/div[1]/div/div[1]/div[1]/img[1]').get_attribute(
-#             'src')
-#     try:
-#         counter = counter + 1
-#
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size1 = 'Nothing'
-#
-#         else:
-#
-#             size1 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[1]/span/div/div').text
-#
-#             if 'XS - L' in size1:
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size1 = 'Nothing'
-#                 else:
-#                     size1 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
-#
-#     except:
-#         size1 = 'Nothing'
-#         counter = counter - 1
-#
-#     # if 'Nothing' in size1:
-#     #     size2 = 'Nothing'
-#     #     size3 = 'Nothing'
-#     #     size4 = 'Nothing'
-#     #     size5 = 'Nothing'
-#     #     size6 = 'Nothing'
-#     # else:
-#     try:
-#         counter = counter + 1
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size2 = 'Nothing'
-#
-#         else:
-#
-#             size2 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[2]/span/div/div').text
-#             if size1 in size2 and size1 != 'L' and size2 != 'XL':
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size2 = 'Nothing'
-#                 else:
-#                     size2 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-#     except:
-#         size2 = 'Nothing'
-#         counter = counter - 1
-#
-#     try:
-#         counter = counter + 1
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size3 = 'Nothing'
-#
-#         else:
-#             size3 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[3]/span/div/div').text
-#             if size2 in size3 and size2 != 'L' and size3 != 'XL':
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size3 = 'Nothing'
-#
-#                 else:
-#                     size3 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
-#     except:
-#         size3 = 'Nothing'
-#         counter = counter - 1
-#
-#     try:
-#         counter = counter + 1
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size4 = 'Nothing'
-#
-#         else:
-#             size4 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[4]/span/div/div').text
-#             if size3 in size4 and size3 != 'L' and size4 != 'XL':
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size4 = 'Nothing'
-#
-#                 else:
-#                     size4 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-#     except:
-#         counter = counter - 1
-#         size4 = 'Nothing'
-#
-#     try:
-#         counter = counter + 1
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size5 = 'Nothing'
-#
-#         else:
-#             size5 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[5]/span/div/div').text
-#             if size4 in size5 and size4 != 'L' and size5 != 'XL':
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size5 = 'Nothing'
-#
-#                 else:
-#                     size5 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-#     except:
-#         counter = counter - 1
-#         size5 = 'Nothing'
-#
-#     try:
-#         counter = counter + 1
-#         check_if_sold_out = driver.find_element_by_xpath(
-#             '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div').get_attribute(
-#             "class")
-#         if 'radio_soldout' in check_if_sold_out:
-#             size6 = 'Nothing'
-#
-#         else:
-#             size6 = driver.find_element_by_xpath(
-#                 '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[6]/span/div/div').text
-#             if size5 in size6 and size5 != 'L' and size6 != 'XL':
-#                 check_if_sold_out = driver.find_element_by_xpath(
-#                     '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div').get_attribute(
-#                     "class")
-#                 if 'radio_soldout' in check_if_sold_out:
-#                     size6 = 'Nothing'
-#
-#                 else:
-#                     size6 = driver.find_element_by_xpath(
-#                         '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[2]/div/div[1]/div[2]/div[7]/span/div/div').text
-#     except:
-#         counter = counter - 1
-#         size6 = 'Nothing'
-#     counterT = str(counter)
-#
-#     driver.quit()
-#     print(image)
-#     return Product(name=name, price=price, color=color, link=link, image=image, size1=size1, size2=size2, size3=size3,
-#                    size4=size4, size5=size5, size6=size6, counterT=counter)
-
-
 def get_raw_price(string):
-    if '€' in string:
-        convert_price = 19.10
-    elif "$" in string:
-        convert_price = 18.26
-    else:
-        convert_price = 4.87
-
     new_str = ''
     for each in string:
         if each in "1234567890.,":
             new_str += each
     if ',' in new_str:
         new_str = new_str.replace(',', '.')
-    price = round(float(new_str) * convert_price)
+    if '€' in string:
+        url = 'https://api.exchangerate-api.com/v4/latest/EUR'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('EUR', 'EGP', float(new_str)))
+    elif "$" in string:
+        url = 'https://api.exchangerate-api.com/v4/latest/USD'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('USD', 'EGP', float(new_str)))
+    else:
+        url = 'https://api.exchangerate-api.com/v4/latest/SAR'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('SAR', 'EGP', float(new_str)))
+
     return price
 
 
@@ -589,144 +374,54 @@ class shein2egypt(http.Controller):
     @http.route('/Shein2egypt', website=True, auth='user')
     def web_scrapper(self, **kw):
         if kw:
+
             Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
+            Link_of_product = kw["Url"]
+
             # checking if its shein url only or not and not a homepage
-            if 'https' in kw["Url"] and 'shein' in kw["Url"] and ".html" in kw["Url"]:
-                start = time.time()
+            if 'https' in Link_of_product and 'shein' in Link_of_product and ".html" in Link_of_product:
 
-                Link_of_product = kw["Url"]
-
+                # check for parent products in database
                 checkLink = request.env['product.template'].search(
                     [('product_description', 'like', Link_of_product[11:120]),
                      ('description', '=', '<p>first item</p>')])
-                print(type(checkLink))
+                print(checkLink)
 
-                print(Link_of_product[12:110])
-
-                # if there is a product with same link we remove it from category, so it doesn't show in
-                # ALl search history part
                 if checkLink:
+
+                    name_C = checkLink.name
+                    Description_C = checkLink.product_description
+                    price_C = checkLink.list_price
+                    image_C = checkLink.image_1920
+                    # put child category
+                    category_implementation = request.env['product.public.category'].sudo().search(
+                        [('id', '=', '14',)])
+
+                    C_product = request.env['product.template'].sudo().create({'name': name_C,
+                                                                               'list_price': price_C,
+                                                                               'product_description': Description_C,
+                                                                               'is_published': True,
+                                                                               'image_1920': image_C,
+                                                                               'public_categ_ids': [
+                                                                                   (6, 0, [category_implementation.id])]
+                                                                               })
+
                     copy_attributes = request.env['product.template.attribute.line'].sudo().search(
                         [('id', '=', checkLink.attribute_line_ids.id)])
 
-                    tot = copy_attributes.value_ids
-                    i = 0
-                    for qq in tot.ids:
+                    Sizes_C = copy_attributes.value_ids
 
-                        valC = request.env['product.attribute.value'].sudo().search([('id', '=', qq,)])
-                        if i == 0:
-                            size_1 = valC
-                            if size_1:
-                                WhichSize = "F1"
+                    Write_sizes(Sizes_C.ids, Attribute, C_product)
 
-                        if i == 1:
-                            size_2 = valC
-                            if size_1:
-                                WhichSize = "F2"
-
-                        if i == 2:
-                            size_3 = valC
-                            if size_1:
-                                WhichSize = "F3"
-
-                        if i == 3:
-                            size_4 = valC
-                            if size_1:
-                                WhichSize = "F4"
-
-                        if i == 4:
-                            size_5 = valC
-                            if size_1:
-                                WhichSize = "F5"
-
-                        if i == 5:
-                            size_6 = valC
-                            if size_1:
-                                WhichSize = "F6"
-
-                        i += 1
-                    category_implementation = request.env['product.public.category'].sudo().search(
-                            [('id', '=', '14',)])
-                    _product = request.env['product.template'].sudo().create({'name': checkLink.name,
-                                                                              'list_price': checkLink.list_price,
-                                                                              'product_description': checkLink.product_description,
-                                                                              'is_published': True,
-                                                                              'image_1920': checkLink.image_1920,
-                                                                              'public_categ_ids': [
-                                                                                  (6, 0, [category_implementation.id])]
-                                                                              })
-                    try:
-                        if size_1 and "F1" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [(6, 0, [size_1.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_2 and "F2" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_3 and "F3" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_4 and "F4" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_5 and "F5" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-
-                        if size_6 and "F6" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': _product.id,
-                                'value_ids': [
-                                    (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
-                            })
-                            _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-
-                    end = time.time()
-                    print(f"copy database done {end - start}")
                     return request.redirect("/shop/category/personal-shop-15")
-                # Copying ends here and it endsss in 2 secs :)
+                # Copying ends here and it endsss in 0.5 - 2 seconds
 
                 else:
+                    # if we dont have it in parents products
                     start = time.time()
-                    product = get_product(kw["Url"])
+
+                    product = get_product(Link_of_product)
 
                     code = upload_image(product.image)
                     # translation didnt work here so we added by id
@@ -740,6 +435,8 @@ class shein2egypt(http.Controller):
                     _product = request.env['product.template'].sudo().create({'name': product_name,
                                                                               'list_price': get_raw_price(
                                                                                   product.price),
+                                                                              'standard_price': get_raw_price(
+                                                                                  product.price),
                                                                               'product_description': product.link,
                                                                               'is_published': True,
                                                                               'image_1920': base64.b64encode(
@@ -752,9 +449,11 @@ class shein2egypt(http.Controller):
                     print(_product.id)
 
                     counter = int(product.counterT)
+                    check_avilable_sizes(product.size1, product.size2, product.size3, product.size4, product.size5,
+                                         product.size6)
 
-                    put_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
-                              product.size6, _product)
+                    Define_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
+                                 product.size6, _product)
 
                     end = time.time()
                     print(f"image loading Not in database {end - start}")

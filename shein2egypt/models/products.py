@@ -1,14 +1,39 @@
+import requests
+
 from odoo import fields, models, api
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options
 from dataclasses import dataclass
+import math
 
 from odoo.http import request
 
 
+class RealTimeCurrencyConverter():
+    def __init__(self, url):
+        self.data = requests.get(url).json()
+        self.currencies = self.data['rates']
+
+    def convert(self, from_currency, to_currency, amount):
+        initial_amount = amount
+        # first convert it into USD if it is not in USD.
+        # because our base currency is USD
+        if from_currency != 'USD':
+            amount = amount / self.currencies[from_currency]
+
+            # limiting the precision to 4 decimal places
+        amount = round(amount * self.currencies[to_currency], 4)
+        return amount
+
+
 @dataclass
 class Product:
+    name: str = None
+    color: str = None
     price: str = None
+    link: str = None
+    image: str = None
+    is_featured: bool = False
     size1: str = None
     size2: str = None
     size3: str = None
@@ -16,6 +41,76 @@ class Product:
     size5: str = None
     size6: str = None
     counterT: str = None
+
+
+def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5, productS6, _product):
+    if counter:
+        Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+        sizesList = [productS1, productS2, productS3, productS4,
+                     productS5, productS6, ]
+        _product = _product
+        # for rotation in sizesList:
+        #     if 'Nothing' in sizesList:
+        #         sizesList.remove('Nothing')
+        print(sizesList)
+        sizing = set_avilable_sizes(sizesList)
+
+        Write_sizes(sizing, Attribute, _product)
+
+
+def set_avilable_sizes(sizesList):
+    sizesList2 = []
+    for x in sizesList:
+        val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
+
+        if val:
+            sizesList2.append(val)
+
+    return sizesList2
+
+
+def check_avilable_sizes(productS1, productS2, productS3, productS4, productS5, productS6, ):
+    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
+    sizesList = [productS1, productS2, productS3, productS4,
+                 productS5, productS6, ]
+    for rotation in sizesList:
+        if 'Nothing' in sizesList:
+            sizesList.remove('Nothing')
+
+    for x in sizesList:
+        if 'Nothing' in x or '-' in x:
+            continue
+        else:
+            val = request.env['product.attribute.value'].sudo().search([('name', '=', x,)])
+            if not val:
+                request.env['product.attribute.value'].sudo().create({'name': x,
+                                                                      'attribute_id': Attribute.id})
+
+
+def Write_sizes(sizes_id_separte_odoo_form, Attribute, _product, ):
+    # check is it copying or new item
+    if all([isinstance(item, int) for item in sizes_id_separte_odoo_form]):
+        # copy
+        sizes_id_int_form = sizes_id_separte_odoo_form
+    else:
+        # new
+        sizes_id_separte_odoo_form = sizes_id_separte_odoo_form
+        print(sizes_id_separte_odoo_form)
+
+        sizes_id_int_form = []
+
+        for adding_ids in sizes_id_separte_odoo_form:
+            x = adding_ids.id
+            if x:
+                sizes_id_int_form.append(adding_ids.id)
+        print(sizes_id_int_form)
+
+    ptal = request.env['product.template.attribute.line'].sudo().create({
+        'attribute_id': Attribute.id if Attribute else False,
+        'product_tmpl_id': _product.id,
+        'value_ids': [(6, 0, sizes_id_int_form)],
+    })
+    _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
 
 
 def product_update(Url):
@@ -199,20 +294,25 @@ def product_update(Url):
 
 
 def get_raw_price(string):
-    if '€' in string:
-        convert_price = 19.10
-    elif "$" in string:
-        convert_price = 18.26
-    else:
-        convert_price = 4.87
-
     new_str = ''
     for each in string:
         if each in "1234567890.,":
             new_str += each
     if ',' in new_str:
         new_str = new_str.replace(',', '.')
-    price = round(float(new_str) * convert_price)
+    if '€' in string:
+        url = 'https://api.exchangerate-api.com/v4/latest/EUR'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('EUR', 'EGP', float(new_str)))
+    elif "$" in string:
+        url = 'https://api.exchangerate-api.com/v4/latest/USD'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('USD', 'EGP', float(new_str)))
+    else:
+        url = 'https://api.exchangerate-api.com/v4/latest/SAR'
+        converter = RealTimeCurrencyConverter(url)
+        price = math.ceil(converter.convert('SAR', 'EGP', float(new_str)))
+
     return price
 
 
@@ -230,30 +330,29 @@ class ProductsTemplate(models.Model):
         category_implementation = request.env['product.public.category'].sudo().search(
             [('id', '=', '14',)])
 
-        RR = request.env['product.template']
+        Products_List = request.env['product.template']
         for count in intId:
             counter = request.env['product.template'].sudo().search([("id", "=", count)])
-            RR = RR + counter
+            Products_List = Products_List + counter
 
-        for x in RR:
+        for x in Products_List:
             x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
-
 
     def Update_products(self):
         intId = self.ids
         category_implementation = request.env['product.public.category'].sudo().search(
             [('id', '=', '14',)])
 
-        RR = request.env['product.template']
+        Products_List = request.env['product.template']
         for count in intId:
             counter = request.env['product.template'].sudo().search([("id", "=", count)])
-            RR = RR + counter
+            Products_List = Products_List + counter
 
-        print(RR)
+        print(Products_List)
 
         y = str
 
-        for x in RR:
+        for x in Products_List:
             if y == x.name:
                 continue
             Products_idz = x.product_description
@@ -264,258 +363,23 @@ class ProductsTemplate(models.Model):
 
                 x.sudo().write({'list_price': get_raw_price(product.price)})
 
-
                 name = x.name
 
-                Updating_samexs = request.env['product.template'].sudo().search(
+                Updating_Child_products = request.env['product.template'].sudo().search(
                     [('name', '=', name)])
                 # good till here
 
-                Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
-                counter = int(product.counterT)
-                WhichSize: str = None
+                Define_sizes(counter, product.size1, product.size2, product.size3, product.size4, product.size5,
+                             product.size6, x)
 
-                sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
-                             product.size6, ]
-                for qqq in sizezList:
-                    if 'Nothing' in sizezList:
-                        sizezList.remove('Nothing')
-
-                sizezList_odoo = sizezList
-                sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
-
-                try:
-                    print("First item")
-                    for ll in sizezList:
-
-                        val = request.env['product.attribute.value'].sudo().search([('name', '=', ll,)])
-
-                        if sizezList_odoo[0] == ll:
-                            size_1 = val
-                            if size_1:
-                                WhichSize = "F1"
-
-                        if sizezList_odoo[1] == ll:
-                            size_2 = val
-                            if size_2:
-                                WhichSize = "F2"
-
-                        if sizezList_odoo[2] == ll:
-                            size_3 = val
-                            if size_3:
-                                WhichSize = "F3"
-
-                        if sizezList_odoo[3] == ll:
-                            size_4 = val
-                            if size_4:
-                                WhichSize = "F4"
-
-                        if sizezList_odoo[4] == ll:
-                            size_5 = val
-                            if size_5:
-                                WhichSize = "F5"
-
-                        if sizezList_odoo[5] == ll:
-                            size_6 = val
-                            if size_6:
-                                WhichSize = "F6"
-
-
-                except:
-                    No_attribute = 0
-
-                try:
-                    if size_1 and "F1" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [(6, 0, [size_1.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                except:
-                    pass
-                try:
-                    if size_2 and "F2" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [(6, 0, [size_1.id, size_2.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                except:
-                    pass
-                try:
-                    if size_3 and "F3" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                except:
-                    pass
-                try:
-                    if size_4 and "F4" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                except:
-                    pass
-                try:
-                    if size_5 and "F5" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [
-                                (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                except:
-                    pass
-                try:
-
-                    if size_6 and "F6" in WhichSize:
-                        ptal = request.env['product.template.attribute.line'].sudo().create({
-                            'attribute_id': Attribute.id if Attribute else False,
-                            'product_tmpl_id': x.id,
-                            'value_ids': [
-                                (6, 0,
-                                 [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
-                        })
-                        x.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                except:
-                    pass
-
-                for xy in Updating_samexs:
-
+                for xy in Updating_Child_products:
                     xy.sudo().write({'list_price': get_raw_price(product.price)})
                     x.sudo().write({'public_categ_ids': [(6, 0, [category_implementation.id])]})
 
-                    Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
-                    counter = int(product.counterT)
-                    WhichSize: str = None
-                    sizezList = [product.size1, product.size2, product.size3, product.size4, product.size5,
-                                 product.size6, ]
-                    for qqq in sizezList:
-                        if 'Nothing' in sizezList:
-                            sizezList.remove('Nothing')
+                    Define_sizes(counter, product.size1, product.size2, product.size3, product.size4,
+                                 product.size5,
+                                 product.size6, xy)
 
-                    sizezList_odoo = sizezList
-                    sizezList_odoo.extend(('1', '2', '3', '4', '5', '6'))
-
-                    try:
-                        for ll in sizezList:
-
-                            val = request.env['product.attribute.value'].sudo().search([('name', '=', ll,)])
-
-                            if sizezList_odoo[0] == ll:
-                                size_1 = val
-                                if size_1:
-                                    WhichSize = "F1"
-
-                            if sizezList_odoo[1] == ll:
-                                size_2 = val
-                                if size_2:
-                                    WhichSize = "F2"
-
-                            if sizezList_odoo[2] == ll:
-                                size_3 = val
-                                if size_3:
-                                    WhichSize = "F3"
-
-                            if sizezList_odoo[3] == ll:
-                                size_4 = val
-                                if size_4:
-                                    WhichSize = "F4"
-
-                            if sizezList_odoo[4] == ll:
-                                size_5 = val
-                                if size_5:
-                                    WhichSize = "F5"
-
-                            if sizezList_odoo[5] == ll:
-                                size_6 = val
-                                if size_6:
-                                    WhichSize = "F6"
-
-
-                    except:
-                        No_attribute = 0
-                    print(xy)
-                    print(Attribute)
-                    print(size_1, size_2, size_3, size_4)
-                    print(WhichSize)
-                    try:
-                        if size_1 and "F1" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [(6, 0, [size_1.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                    except:
-                        pass
-                    try:
-                        if size_2 and "F2" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_3 and "F3" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-                        if size_4 and "F4" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [(6, 0, [size_1.id, size_2.id, size_3.id, size_4.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-
-                    except:
-                        pass
-                    try:
-                        if size_5 and "F5" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [
-                                    (6, 0, [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
-                    try:
-
-                        if size_6 and "F6" in WhichSize:
-                            ptal = request.env['product.template.attribute.line'].sudo().create({
-                                'attribute_id': Attribute.id if Attribute else False,
-                                'product_tmpl_id': xy.id,
-                                'value_ids': [
-                                    (6, 0,
-                                     [size_1.id, size_2.id, size_3.id, size_4.id, size_5.id, size_6.id])],
-                            })
-                            xy.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
-                    except:
-                        pass
                 y = x.name
 
         # request.redirect("/shop/category/update-12")

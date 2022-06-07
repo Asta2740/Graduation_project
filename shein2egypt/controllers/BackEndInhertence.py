@@ -8,6 +8,7 @@ from odoo import http
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.http import request
+
 from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
 import undetected_chromedriver as uc
 from selenium.webdriver.chrome.options import Options

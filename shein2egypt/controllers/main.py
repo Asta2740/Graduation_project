@@ -558,17 +558,28 @@ class shein2egypt(http.Controller):
                 print(checkLink)
 
                 if checkLink:
+                    checkLink.sudo().write({'Counter': checkLink.Counter + 1})
+                    if checkLink.Counter > 10:
+                        category_implementation = request.env['product.public.category'].sudo().search(
+                            [('id', '=', '8',)])
+                        category_implementation2 = request.env['product.public.category'].sudo().search(
+                            [('id', '=', '16',)])
+
+                        checkLink.sudo().write({'public_categ_ids': [
+                            (6, 0, [category_implementation.id, category_implementation2.id])]})
 
                     name_C = checkLink.name
                     Description_C = checkLink.product_description
                     price_C = checkLink.list_price
                     image_C = checkLink.image_1920
+                    Cost_C = checkLink.standard_price
                     # put child category
                     category_implementation = request.env['product.public.category'].sudo().search(
                         [('id', '=', '14',)])
 
                     C_product = request.env['product.template'].sudo().create({'name': name_C,
                                                                                'list_price': price_C,
+                                                                               'standard_price':Cost_C,
                                                                                'product_description': Description_C,
                                                                                'is_published': True,
                                                                                'image_1920': image_C,
@@ -601,7 +612,7 @@ class shein2egypt(http.Controller):
 
                     product_name = put_colour_in_name(product.name, product.color)
                     Cost = get_raw_price(product.price)
-                    selling_price = math.ceil(Cost(1+0.20))
+                    selling_price = math.ceil(Cost*(1+0.20))
 
                     _product = request.env['product.template'].sudo().create({'name': product_name,
                                                                               'list_price':selling_price,
@@ -613,6 +624,7 @@ class shein2egypt(http.Controller):
                                                                               'public_categ_ids': [
                                                                                   (6, 0, [category_implementation.id])],
                                                                               'description': 'first item',
+                                                                              'Counter': 1,
 
                                                                               })
                     print(_product.id)

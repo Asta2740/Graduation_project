@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='categ_id']" position="after">
                 <field name="product_description"/>
-<!--                <field name="Counter"/>-->
+                <field name="Counter"/>
 <!--                <field name="if_sales"/>-->
 
             </xpath>
@@ -23,8 +23,7 @@
             <header>
                 <button name="Update_products" string="Update Products" class="btn-primary"
                         type="object"/>
-                <button name="Archived_update" string="Update_archived" class="btn-primary"
-                        type="object"/>
+
 
             </header>
 

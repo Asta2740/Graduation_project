@@ -511,18 +511,39 @@ def get_raw_price(string):
 
 class ProductsTemplate(models.Model):
     _inherit = "product.template"
-    # so now we inherted the product table and giviin it a new filed
-    product_description = fields.Char(string="product description")
+    # so now we inherted the product table and givin it a new filed
+    product_description = fields.Char(string="Link")
     if_sales = fields.Boolean(string="Has Sale or not")
 
     Counter = fields.Float(string="Counter")
+    def Update_names(self):
+        intId = self.ids
+
+        Products_List = request.env['product.template']
+        for count in intId:
+            counter = request.env['product.template'].sudo().search([("id", "=", count)])
+            Products_List = Products_List + counter
+
+        for x in Products_List:
+            S2=x.name
+            S2=S2[S2.find(" co"):]
+            S1 = x.product_description
+            S1 = S1[21:S1.find("-p-")]
+            if 'color' in S2:
+                S3 = S1 + S2
+            else:
+                S3 = S1
+            x.sudo().write({'name': S3})
+
+                # color
+
 
     # you will see scrapper name in gui as label name , if you dont give any name it will be name
 
 
     def Update_products(self):
         intId = self.ids
-
+        print(intId)
         Products_List = request.env['product.template']
         for count in intId:
             counter = request.env['product.template'].sudo().search([("id", "=", count)])
@@ -547,6 +568,7 @@ class ProductsTemplate(models.Model):
 
                 Updating_Child_products = request.env['product.template'].sudo().search(
                     [('name', '=', name)])
+                print(Updating_Child_products)
                 # good till here
                 Sold_out_check = product.counterT
                 if Sold_out_check:
@@ -581,4 +603,3 @@ class ProductsTemplate(models.Model):
 
                 y = x.name
 
-        # request.redirect("/shop/category/update-12")

@@ -24,6 +24,9 @@
                 <button name="Update_products" string="Update Products" class="btn-primary"
                         type="object"/>
 
+                <button name="Update_names" string="Update names" class="btn-primary"
+                        type="object"/>
+
 
             </header>
 

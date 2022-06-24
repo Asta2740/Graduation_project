@@ -141,7 +141,7 @@ class WebsiteSale_inhernet(WebsiteSale):
         return 'is_published desc, %s, id desc' % order
 
     def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
-        domains = [request.website.salex_domain()]
+        domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
                 subdomains = [
@@ -239,7 +239,7 @@ class WebsiteSale_inhernet(WebsiteSale):
 
         request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
 
-        filter_by_price_enabled = request.website.is_view_active('website_sale.filterxs_price')
+        filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             company_currency = request.website.company_id.currency_id
             conversion_rate = request.env['res.currency']._get_conversion_rate(company_currency, pricelist.currency_id,
@@ -291,7 +291,7 @@ class WebsiteSale_inhernet(WebsiteSale):
 
         search_product = details[0].get('results', request.env['product.template']).with_context(bin_size=True)
 
-        filter_by_price_enabled = request.website.is_view_active('website_sale.filterxs_price')
+        filter_by_price_enabled = request.website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
@@ -344,8 +344,7 @@ class WebsiteSale_inhernet(WebsiteSale):
             if request.env['product.public.category'].sudo().search([('id', '=', '15')]) in category:
 
                 products = request.env['product.template'].sudo().search(
-                    [('responsible_id', '=', request.env.user.id,
-                      )],
+                    [('responsible_id', '=', request.env.user.id,)],
                     order='id desc')[offset:offset + ppg]
             else:
                 # for fawary category just make the framework go with its flow

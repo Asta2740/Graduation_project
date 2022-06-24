@@ -1,13 +1,16 @@
 import base64
 import urllib
 import requests
+from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
 from dataclasses import dataclass
 from odoo import http
 from odoo.http import request
 import time
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
+
+
 import math
 from tkinter import *
 import tkinter as tk
@@ -66,6 +69,7 @@ def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5,
                  productS7, productS8, productS9, productS10, productS11, productS12,
                  productS13, productS14, productS15, productS16, productS17, productS18,
                  _product):
+
     if counter:
         Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
         sizesList = [productS1, productS2, productS3, productS4,
@@ -78,9 +82,9 @@ def Define_sizes(counter, productS1, productS2, productS3, productS4, productS5,
         #     if 'Nothing' in sizesList:
         #         sizesList.remove('Nothing')
 
-        sizing = set_avilable_sizes(sizesList)
+        Sizing_format = set_avilable_sizes(sizesList)
 
-        Write_sizes(sizing, Attribute, _product)
+        Write_sizes(Sizing_format, Attribute, _product)
 
 
 def set_avilable_sizes(sizesList):
@@ -137,21 +141,24 @@ def Write_sizes(sizes_id_separte_odoo_form, Attribute, _product, ):
                 sizes_id_int_form.append(adding_ids.id)
         print(sizes_id_int_form)
 
-    ptal = request.env['product.template.attribute.line'].sudo().create({
+    Sizing_format = request.env['product.template.attribute.line'].sudo().create({
         'attribute_id': Attribute.id if Attribute else False,
         'product_tmpl_id': _product.id,
         'value_ids': [(6, 0, sizes_id_int_form)],
     })
-    _product.sudo().write({'attribute_line_ids': [(6, 0, [ptal.id])]})
+    _product.sudo().write({'attribute_line_ids': [(6, 0, [Sizing_format.id])]})
 
 
 def get_product(url):
     counter = 0
+
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
+
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
     driver.get(url)
+
     name = driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div[1]/div/div[2]/div[2]/div/div[1]/h1').text
     try:
         price = driver.find_element_by_xpath(
@@ -481,7 +488,9 @@ def get_product(url):
 
     driver.quit()
     print(image)
-    return Product(name=name, price=price, color=color, link=link, image=image, size1=size1, size2=size2, size3=size3,
+    return Product(name=name, price=price, color=color,
+                   link=link, image=image, size1=size1,
+                   size2=size2, size3=size3,
                    size4=size4, size5=size5, size6=size6,
                    size7=size7, size8=size8, size9=size9,
                    size10=size10, size11=size11, size12=size12,
@@ -497,6 +506,7 @@ def get_raw_price(string):
             new_str += each
     if ',' in new_str:
         new_str = new_str.replace(',', '.')
+
     if '€' in string:
         url = 'https://api.exchangerate-api.com/v4/latest/EUR'
         converter = RealTimeCurrencyConverter(url)
@@ -546,18 +556,19 @@ class shein2egypt(http.Controller):
 
             Attribute = request.env['product.attribute'].sudo().search([('name', '=', 'Size')])
 
+            #Get Url
             Link_of_product = kw["Url"]
 
             # checking if its shein url only or not and not a homepage
             if 'https' in Link_of_product and 'shein' in Link_of_product and ".html" in Link_of_product:
 
                 # check for parent products in database
-                checkLink = request.env['product.template'].search(
-                    [('product_description', 'like', Link_of_product[11:120]),
+                checkLink = request.env['product.template'].search([('product_description', 'like', Link_of_product[11:120]),
                      ('description', '=', '<p>first item</p>')])
                 print(checkLink)
 
                 if checkLink:
+
                     checkLink.sudo().write({'Counter': checkLink.Counter + 1})
                     if checkLink.Counter > 10:
                         category_implementation = request.env['product.public.category'].sudo().search(
@@ -612,7 +623,8 @@ class shein2egypt(http.Controller):
 
                     product_name = put_colour_in_name(product.name, product.color)
                     Cost = get_raw_price(product.price)
-                    selling_price = math.ceil(Cost*(1+0.20))
+                    selling_price = math.ceil(Cost*(1+0.20)) #20% profit
+
 
                     _product = request.env['product.template'].sudo().create({'name': product_name,
                                                                               'list_price':selling_price,
@@ -627,9 +639,19 @@ class shein2egypt(http.Controller):
                                                                               'Counter': 1,
 
                                                                               })
+                    S2 = _product.name
+                    S2 = S2[S2.find(" co"):]
+                    S1 = _product.product_description
+                    S1 = S1[21:S1.find("-p-")]
+                    if 'color' in S2:
+                        English_name = S1 + S2
+                    else:
+                        English_name = S1
+                    _product.sudo().write({'name': English_name})
                     print(_product.id)
 
                     counter = int(product.counterT)
+
                     check_avilable_sizes(product.size1, product.size2, product.size3, product.size4, product.size5,
                                          product.size6,
                                          product.size7, product.size8, product.size9, product.size10, product.size11,
